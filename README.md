@@ -39,6 +39,9 @@ pip install -r requirements.local.txt
 # Install the pre-commit hooks
 pre-commit install
 
+# Add an environment file (this can be populated later)
+touch .env
+
 # Build the docker container
 make build
 
