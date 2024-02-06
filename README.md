@@ -1,9 +1,10 @@
 # Competitor matching model
 
-This repo contains the source code for the machine learning models used for TCD SwEng Group 20's project with Integral
+This repo contains the source code for the machine learning models and the api used for TCD SwEng Group 20's project with Integral
 Ad Science - a competitor matching machine learning model.
 
 The project is built using python and runs inside Docker containers.
+The api is built using Django and connects to a PostgreSQL database. This api is used to allow the front end application to communicate with the back end.
 
 ## Version Requirements
 
@@ -31,7 +32,7 @@ source venv/bin/activate
 
 # For windows
 virtualenv venv
-\venv/Scripts\activate.bat
+\venv\Scripts\activate.bat
 
 # Install the local and project dependencies
 pip install -r requirements.local.txt
@@ -59,6 +60,21 @@ make down
 
 # Remove the docker container and restart the application (building a new container)
 make restart
+
+# Make migrations for schema changes
+make migrations
+
+# Migrate changes to the database for schema changes
+make migrate
+
+# Start the python interpreter to manually run specific code / functions
+make shell
+
+# Create a new django app
+make startapp name=name_of_app
+
+# Enter the container in the shell
+make enter
 
 # Format the code
 make format
