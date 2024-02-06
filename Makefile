@@ -28,6 +28,9 @@ startapp:
 enter:
 	docker-compose -f docker/docker-compose.local.yml run --entrypoint=sh api
 
+test:
+	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py test $(if $(path),tests.$(path),tests)
+
 format: path ?= .
 format:
 	isort $(path) -l 120 --multi-line=3 --trailing-comma && black $(path) --line-length 120
