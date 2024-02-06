@@ -70,6 +70,13 @@ make migrate
 # Start the python interpreter to manually run specific code / functions
 make shell
 
+# Run the whole test API suite
+make test
+
+# Run individual API test(s)
+# Here `path` should be the path of the test file(s) relative to the `/api/tests/` directory, and should be separated by `.` not `/`
+make test path=<path.to.tests>
+
 # Create a new django app
 make startapp name=name_of_app
 
