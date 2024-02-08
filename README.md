@@ -50,6 +50,18 @@ make build
 make run
 ```
 
+To work with the larger files in this repository (such as the model weights), you should install [git lfs](git-lfs.com).
+You can download it from the website or using homebrew or similar.
+You must then install it locally:
+
+```bash
+# Install via homebrew (on macOS)
+brew install git-lfs
+
+# After installation
+git lfs install
+```
+
 ## Useful Commands
 
 Below are some useful commands and what they do
