@@ -29,7 +29,7 @@ enter:
 	docker-compose -f docker/docker-compose.local.yml run --entrypoint=sh api
 
 test:
-	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py test $(if $(path),tests.$(path),tests)
+	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py test $(if $(path),tests.$(path),tests) --keepdb
 
 format: path ?= .
 format:
