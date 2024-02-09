@@ -1,0 +1,19 @@
+---
+name: Build and Test API
+"on": [push, pull_request]
+
+jobs:
+  test_api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          touch .env
+          make build
+
+      - name: Test
+        run: make test
