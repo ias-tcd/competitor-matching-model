@@ -4,6 +4,7 @@ django-cors-headers==4.3.1
 django-log-request-id==2.1.0
 django-request-logging==0.7.5
 djangorestframework==3.14.0
+gunicorn>=21.2,<21.3
 psycopg2==2.9.9
 requests==2.31.0
 whitenoise==6.6.0
