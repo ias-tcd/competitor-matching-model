@@ -28,6 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "*",
 ]
 
 INTERNAL_IPS = ["127.0.0.1", "172.20.0.1"]

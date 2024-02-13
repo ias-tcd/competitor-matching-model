@@ -5,7 +5,8 @@ name: Build and Deploy to AWS
     branches: [main]
 
 env:
-  API_IMAGE: ghcr.io/ias-tcd/competitor-matching-api/api
+  API_IMAGE: ghcr.io/ias-tcd/competitor-matching-model/api
+  NGINX_IMAGE: ghcr.io/ias-tcd/competitor-matching-model/nginx
   REGISTRY: ghcr.io
 
 jobs:
@@ -20,6 +21,7 @@ jobs:
       - name: Set environment variables to .env
         run: |
           echo "API_IMAGE=$(echo ${{env.API_IMAGE}} )" >> $GITHUB_ENV
+          echo "NGINX_IMAGE=$(echo ${{env.NGINX_IMAGE}} )" >> $GITHUB_ENV
 
       - name: Log in to GitHub Packages
         env:
@@ -29,18 +31,23 @@ jobs:
       - name: Pull images
         run: |
           docker pull ${{ env.API_IMAGE }} || true
+          docker pull ${{ env.NGINX_IMAGE }} || true
 
       - name: Build images
         env:
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           HOST_IP_ADDRESS: ${{ secrets.AWS_EC2_IP_ADDRESS }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
-          touch .env
+          echo "DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}" >> .env
           docker-compose --env-file ./.env -f docker/docker-compose.prod.yml build
 
       - name: Push images
         run: |
           docker push ${{ env.API_IMAGE }}
+          docker push ${{ env.NGINX_IMAGE }}
 
   checking-secrets:
     name: Checking secrets
@@ -71,8 +78,15 @@ jobs:
       - name: Add environment variables to .env
         run: |
           echo API_IMAGE=${{ env.API_IMAGE }} >> .env
+          echo NGINX_IMAGE=${{ env.NGINX_IMAGE }} >> .env
           echo NAMESPACE=${{ secrets.NAMESPACE }} >> .env
           echo PERSONAL_ACCESS_TOKEN=${{ secrets.PERSONAL_ACCESS_TOKEN }} >> .env
+          echo SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}" >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }} >> .env
+          echo FRONTEND_URL=${{ secrets.FRONTEND_URL }} >> .env
 
       - name: Add the private SSH key to the ssh-agent
         env:
@@ -88,13 +102,13 @@ jobs:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
         run: |
-          scp -o StrictHostKeyChecking=no -r ./.env ./docker/docker-compose.prod.yml ${{secrets.AWS_HOST_USER}}@${{ secrets.AWS_EC2_IP_ADDRESS }}:
+          scp -o StrictHostKeyChecking=no -r ./docker/entrypoint.sh ./.env ./docker/docker-compose.prod.yml ${{secrets.AWS_HOST_USER}}@${{ secrets.AWS_EC2_IP_ADDRESS }}:
           ssh -o StrictHostKeyChecking=no ${{secrets.AWS_HOST_USER}}@${{ secrets.AWS_EC2_IP_ADDRESS }} << EOF
               set -e
-              docker-compose -f docker-compose.prod.yml down --rmi all -v
               docker login ghcr.io -u ${{secrets.NAMESPACE}} -p ${{secrets.PERSONAL_ACCESS_TOKEN}}
               docker pull $API_IMAGE
-              docker-compose -f docker-compose.prod.yml run api python api/manage.py migrate
-              docker-compose --env-file ./.env -f docker-compose.prod.yml up -d
+              docker pull $NGINX_IMAGE
               docker logout
+              docker-compose -f docker-compose.prod.yml down --rmi all
+              sh entrypoint.sh
           EOF
