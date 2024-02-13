@@ -26,4 +26,6 @@ WORKDIR /src
 
 COPY .. /src/
 
+RUN mkdir ./api/staticfiles/
+
 RUN python api/manage.py collectstatic --no-input
