@@ -22,7 +22,7 @@ companies_to_urls: dict[str, list[str]] = {
 # https://requests.readthedocs.io/en/latest/api/
 
 # create the images directory in home if it doesn't exist
-images_path = f"{os.path.expanduser('~')}/images"
+images_path = "./images"
 if not glob.glob(images_path):
     os.mkdir(images_path)
 
