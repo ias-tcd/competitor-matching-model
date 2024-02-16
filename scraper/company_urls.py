@@ -7,8 +7,6 @@ companies_to_urls: dict[str, list[str]] = {
         "https://www.adidas.ie/logo_print?start=48",
         "https://www.pinterest.ie/search/pins/?q=adidas&rs=typed",
         "https://www.pinterest.ie/adidas/adidas-originals/",
-        "https://www.pinterest.ie/adidas/adidas-originals/",
-        "https://i.pinimg.com/originals/3b/6f/2f/3b6f2f7ccfb91210e53623871ccb60cd.jpg",
         "https://www.pinterest.ie/search/pins/?q=adidas%20streetwear&rs=typed",
         "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*FLLKW10QWJCJ_guRKR4olA.jpeg",
         "https://wallpapercave.com/wp/wp4620709.jpg",
@@ -59,12 +57,5 @@ companies_to_urls: dict[str, list[str]] = {
         "https://www.pinterest.ie/adidas/styling-sports-jerseys/",
         "https://www.adidas.ie/logo_print?start=96",
         "https://www.pinterest.ie/adidas/festival-style/",
-    ],
-    "nike": [],
-    "puma": [],
-    "reebok": [],
-    "under_armour": [],
-    "north_face": [],
-    "new_balance": [],
-    "lululemon": [],
+    ]
 }
