@@ -1,3 +1,6 @@
 .git
 **/__pycache__
 venv
+.github
+scraper/
+images/
