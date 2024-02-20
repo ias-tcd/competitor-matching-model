@@ -22,7 +22,10 @@ adidas_src_url_pattern = r"https://assets.adidas.com/images/w_\d+,h_\d+"
 pintest_src_url_pattern = r"https://i.pinimg.com/\d+x/*"
 
 
-def get_image_bytes(src: str):
+def get_image_bytes_and_file_ext(src: str):
+    img_bytes: bytes
+    file_extension: str
+
     if re.match(r"https:*", src):
         if re.match(adidas_src_url_pattern, src):
             new_width = random.randint(400, 1000)  # nosec
@@ -30,14 +33,20 @@ def get_image_bytes(src: str):
             src = re.sub(adidas_src_url_pattern, f"https://assets.adidas.com/images/w_{new_width},h_{new_height}", src)
         elif re.match(pintest_src_url_pattern, src):
             src = re.sub(pintest_src_url_pattern, "https://i.pinimg.com/564x/", src)
+        if mo := re.search(r"(\.\w+)$", src):
+            file_extension = mo.group(0)
 
         # wait in between requests
         sleep(random.random() * 5.3 + 0.8)  # nosec
-        return requests.get(url=src, timeout=5).content
+        img_bytes = requests.get(url=src, timeout=5).content
 
     elif re.match(base64_encoded_image_pattern, src):
         base64_encoding = re.sub("data:image/(jpeg|png);base64,", "", src)
-        return b64decode(base64_encoding)
+        if match_obj := re.search(r"(jpeg|png)", src):
+            file_extension = match_obj.group(0)
+        img_bytes = b64decode(base64_encoding)
+
+    return (img_bytes, "." + file_extension)
 
 
 def download_images(img_sources: ResultSet[Any], company: str, num_scraped_images_for_current_company: int) -> None:
@@ -48,12 +57,12 @@ def download_images(img_sources: ResultSet[Any], company: str, num_scraped_image
 
         img_path = f"{company_images_dir}/{company}_img_{str(num_scraped_images_for_current_company).zfill(3)}"
 
-        img_bytes = get_image_bytes(src)
+        img_bytes, file_extension = get_image_bytes_and_file_ext(src)
 
         print("img_src: ", src)
 
         # write img bytes to file-like obj
-        with open(img_path, "wb") as f:
+        with open(img_path + file_extension, "wb") as f:
             f.write(img_bytes)
             f.close()
 
