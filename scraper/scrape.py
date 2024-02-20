@@ -43,10 +43,10 @@ def get_image_bytes_and_file_ext(src: str):
     elif re.match(base64_encoded_image_pattern, src):
         base64_encoding = re.sub("data:image/(jpeg|png);base64,", "", src)
         if match_obj := re.search(r"(jpeg|png)", src):
-            file_extension = match_obj.group(0)
+            file_extension = "." + match_obj.group(0)
         img_bytes = b64decode(base64_encoding)
 
-    return (img_bytes, "." + file_extension)
+    return (img_bytes, file_extension)
 
 
 def download_images(img_sources: ResultSet[Any], company: str, num_scraped_images_for_current_company: int) -> None:
@@ -59,7 +59,7 @@ def download_images(img_sources: ResultSet[Any], company: str, num_scraped_image
 
         img_bytes, file_extension = get_image_bytes_and_file_ext(src)
 
-        print("img_src: ", src)
+        print(f"img_src: {src}   img_path: {img_path}")
 
         # write img bytes to file-like obj
         with open(img_path + file_extension, "wb") as f:
