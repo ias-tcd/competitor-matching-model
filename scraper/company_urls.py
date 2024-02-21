@@ -62,8 +62,8 @@ companies_to_urls: dict[str, list[str]] = {
         # "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=144",
         # "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=192",
         # "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=240",
-        "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=288",
-        "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=336",
-        "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=384",
+        # "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=288",
+        # "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=336",
+        # "https://www.adidas.ie/accessories%7Cclothing-logo_print?start=384",
     ]
 }
