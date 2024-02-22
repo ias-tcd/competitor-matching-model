@@ -1,6 +1,7 @@
 import os
 import tempfile
 
+from django.http import FileResponse
 from rest_framework import generics, status
 from rest_framework.response import Response
 
@@ -19,6 +20,7 @@ class PredictionsViewSet(generics.GenericAPIView):
 
         temp_dir = tempfile.mkdtemp()
         responses = []
+        output = []
         for image in files:
             filename = image.name
             filepath = os.path.join(temp_dir, filename)
@@ -27,7 +29,24 @@ class PredictionsViewSet(generics.GenericAPIView):
                 for c in image.chunks():
                     f.write(c)
 
-            bbox, confidence = get_result(filepath)
-            responses.append(filename)
+            output_path = get_result(filepath)
+            with open(output_path, "rb") as f:
+                output_image = f.read()
+            # print(f'Have bbox: {bbox} and have "confidence": {confidence}')
+            responses.append(output_path)
+            output.append(output_image)
         print(responses)
-        return Response()
+        return Response(
+            data={
+                "images": responses,
+            }
+        )
+
+
+class PredictionsListViewSet(generics.RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        image_path = request.GET.get("image_path")
+        return FileResponse(open(image_path, "rb"))
+        # with open(image_path, 'rb') as f:
+        #     return FileResponse(f)
+        # return Response()

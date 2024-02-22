@@ -2,7 +2,7 @@ build:
 	docker-compose -f docker/docker-compose.local.yml build
 
 run:
-	docker-compose -f docker/docker-compose.local.yml up --build --remove-orphans
+	docker-compose -f docker/docker-compose.local.yml up --build
 
 down:
 	docker-compose -f docker/docker-compose.local.yml down

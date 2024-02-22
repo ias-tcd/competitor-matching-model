@@ -313,7 +313,7 @@ def get_output(input_image, folder_name="exp", trace=False, file_path=None):
     bbox = None
     with torch.no_grad():
         bbox, output_path = detect(opt)
-        return bbox, output_path
+    return output_path
     # if os.path.exists(output_path):
     #     return Image.open(output_path)
     # else:
