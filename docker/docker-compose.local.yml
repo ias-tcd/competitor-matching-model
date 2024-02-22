@@ -3,6 +3,7 @@ version: "3.8"
 
 services:
   api:
+    container_name: competitor-matching-model-api
     image: competitor-matching-model/api:latest
     command: python api/manage.py runserver 0.0.0.0:8000
     build:
@@ -24,6 +25,7 @@ services:
       - ../:/src
 
   db:
+    container_name: competitor-matching-model-db
     image: postgres:16.1-alpine
     restart: always
     environment:
