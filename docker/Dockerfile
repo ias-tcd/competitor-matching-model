@@ -1,6 +1,6 @@
-FROM python:3.11.7-alpine AS builder
+FROM python:3.11.7-slim AS builder
 
-RUN apk update && apk add musl-dev libpq-dev gcc
+RUN apt-get update && apt-get install -y musl-dev libpq-dev gcc g++ libglib2.0-0 libgl1-mesa-glx && rm -rf /var/lib/apt/lists/*
 
 RUN python -m venv /opt/venv
 
@@ -12,9 +12,11 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
-FROM python:3.11.7-alpine
+FROM python:3.11.7-slim
 
-RUN apk update && apk add libpq-dev
+RUN apt-get update && apt-get install -y libpq-dev
+
+RUN apt-get install -y libglib2.0-0 libgl1-mesa-glx && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/venv /opt/venv
 

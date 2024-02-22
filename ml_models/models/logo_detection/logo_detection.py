@@ -1,30 +1,42 @@
 import os
-# import numpy as np
+import random
 import shutil
 import sys
-# import argparse
+# sys.path.insert(0, './yolov7')
+# import sys
 import time
 from pathlib import Path
 
-import cv2
-import gradio as gr
+# import gradio as gr
 import torch
 import torch.backends.cudnn as cudnn
-from numpy import random
+import yolov7
 from PIL import Image
+# from yolov7_package import Yolov7Detector
+# from yolov7_package.models.experimental import attempt_load
+from yolov7.utils.datasets import LoadImages, LoadStreams
+from yolov7.utils.general import (
+    apply_classifier,
+    check_img_size,
+    check_imshow,
+    increment_path,
+    non_max_suppression,
+    scale_coords,
+    set_logging,
+    xyxy2xywh,
+)
+from yolov7.utils.torch_utils import TracedModel, load_classifier, select_device, time_synchronized
 
-# import pandas as pd
-
-
-BASE_DIR = os.curdir
-os.chdir(BASE_DIR)
-os.makedirs(f"{BASE_DIR}/input", exist_ok=True)
-# os.system(f"git clone https://github.com/WongKinYiu/yolov7.git {BASE_DIR}/yolov7")
-sys.path.append(f"{BASE_DIR}/yolov7")
-# os.system("pip install yolov7-package==0.0.12")
+# BASE_DIR = os.curdir #+ '/models/models/logo_detection'
+BASE_DIR = "/src/ml_models/models/logo_detection/"
+# os.chdir(BASE_DIR)
+# os.makedirs(f"{BASE_DIR}/input", exist_ok=True)
+# sys.path.append(f"{BASE_DIR}/yolov7")
 
 
 def plot_one_box(x, img, color=None, label=None, line_thickness=3):
+    import cv2
+
     # Plots one bounding box on image img
     tl = line_thickness or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
     color = color or [random.randint(0, 255) for _ in range(3)]
@@ -39,32 +51,6 @@ def plot_one_box(x, img, color=None, label=None, line_thickness=3):
 
 
 def detect(opt, save_img=False):
-    #     from models.experimental import attempt_load
-    #     from utils.datasets import LoadStreams, LoadImages
-    #     from utils.general import check_img_size, check_requirements, check_imshow, non_max_suppression, apply_classifier, \
-    #         scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
-    #     from utils.plots import plot_one_box
-    #     from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
-
-    print(f"Options: {opt}")
-
-    from yolov7_package import Yolov7Detector
-    from yolov7_package.models.experimental import attempt_load
-    from yolov7_package.utils.datasets import LoadImages, LoadStreams
-    from yolov7_package.utils.general import (
-        apply_classifier,
-        check_img_size,
-        check_imshow,
-        check_requirements,
-        increment_path,
-        non_max_suppression,
-        scale_coords,
-        set_logging,
-        strip_optimizer,
-        xyxy2xywh,
-    )
-    from yolov7_package.utils.torch_utils import TracedModel, load_classifier, select_device, time_synchronized
-
     bbox = {}
     source, weights, view_img, save_txt, imgsz, trace = (
         opt.source,
@@ -90,9 +76,18 @@ def detect(opt, save_img=False):
     device = select_device(opt.device)
     half = device.type != "cpu"  # half precision only supported on CUDA
 
+    print(weights)
+    weight_dir = "/".join(weights.split("/")[:-1])
+    weights_file = Path(str(weights).strip().replace("'", "").lower())
+    print(os.listdir(BASE_DIR))
+    print(f"Is File: {weights_file.exists()}")
+    # print(os.listdir(weight_dir))
+
     # Load model
-    det = Yolov7Detector(weights=weights, traced=False)
-    model = attempt_load(weights, map_location=device)  # load FP32 model
+    # det = Yolov7Detector(weights=weights, traced=False)
+    # model = attempt_load(weights, map_location=device)  # load FP32 model
+    print(f"Device: {device}")
+    model = yolov7.load(weights)
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
@@ -217,6 +212,8 @@ def detect(opt, save_img=False):
             # Save results (image with detections)
             if save_img:
                 if dataset.mode == "image":
+                    import cv2
+
                     # Image.fromarray(im0).show()
                     cv2.imwrite(save_path, im0)
                     print(f" The image with the result is saved in: {save_path}")
@@ -307,74 +304,86 @@ class options:
         )
 
 
-def get_output(input_image, folder_name="exp", trace=False):
+def get_output(input_image, folder_name="exp", trace=False, file_path=None):
     ### Numpy -> PIL
     # input_image = Image.fromarray(input_image).convert('RGB')
     # input_image.save(f"{BASE_DIR}/input/image.jpg")
-    source = f"{BASE_DIR}/input"
-    opt = options(weights="logo_detection.pt", source=source, name=folder_name, no_trace=not trace)
+    source = file_path or f"{BASE_DIR}/input"
+    opt = options(weights=f"{BASE_DIR}/logo_detection.pt", source=source, name=folder_name, no_trace=not trace)
     bbox = None
     with torch.no_grad():
         bbox, output_path = detect(opt)
-    if os.path.exists(output_path):
-        return Image.open(output_path)
-    else:
-        return input_image
+        return bbox, output_path
+    # if os.path.exists(output_path):
+    #     return Image.open(output_path)
+    # else:
+    #     return input_image
 
 
-def my_test(trace):
-    if trace:
-        exte = "time-trace-2"
-    else:
-        exte = "time-no-trace-2"
+#
+#
+# def my_test(trace):
+#     if trace:
+#         exte = "time-trace-2"
+#     else:
+#         exte = "time-no-trace-2"
+#     print(BASE_DIR)
+#     timings = {}
+#     for dir in os.listdir(f"{BASE_DIR}/input"):
+#         print("looping")
+#         print(dir)
+#         if dir.endswith(".jpg"):
+#             print("Exiting")
+#             continue
+#         timings[dir] = []
+#         print("Entering inner loop")
+#         for subdir in os.listdir(f"{BASE_DIR}/input/{dir}"):
+#             print("inner looping")
+#             print(subdir)
+#             shutil.copy(f"{BASE_DIR}/input/{dir}/{subdir}", f"{BASE_DIR}/input/image.jpg")
+#             start = time.time()
+#             get_output(None, dir + "time-no-trace", trace)
+#             end = time.time()
+#             timings[dir].append(end - start)
+#
+#     total_time = 0
+#     count = 0
+#     for brand, b_timings in timings.items():
+#         print(f"Timings for {brand}: total: {sum(b_timings)}, avg: {sum(b_timings) / len(b_timings)}")
+#         total_time += sum(b_timings)
+#         count += len(b_timings)
+#     print(f"Total timings: total: {total_time}, avg: {total_time / count}")
+
+#
+# def perform_demo(args):
+#     image_path = args[0]
+#     trace = any(a for a in args if a == "trace")
+#     timings = any(a for a in args if a == "time")
+#     shutil.copy(f"{BASE_DIR}/{image_path}", f"{BASE_DIR}/input/")
+#     start_time = time.time()
+#     print("Starting")
+#     get_output(None, trace=trace)
+#     end_time = time.time()
+#     if timings:
+#         print(f"Time taken: {end_time - start_time}s")
+
+#
+# if __name__ == "__main__":
+#     args = sys.argv
+#     if args and args[1] == "run":
+#         demo = gr.Interface(fn=get_output, inputs="image", outputs="image")
+#         demo.launch(debug=True)
+#     else:
+#         perform_demo(args[1:])
+
+
+def get_result(filepath: str):
     print(BASE_DIR)
-    timings = {}
-    for dir in os.listdir(f"{BASE_DIR}/input"):
-        print("looping")
-        print(dir)
-        if dir.endswith(".jpg"):
-            print("Exiting")
-            continue
-        timings[dir] = []
-        print("Entering inner loop")
-        for subdir in os.listdir(f"{BASE_DIR}/input/{dir}"):
-            print("inner looping")
-            print(subdir)
-            shutil.copy(f"{BASE_DIR}/input/{dir}/{subdir}", f"{BASE_DIR}/input/image.jpg")
-            start = time.time()
-            get_output(None, dir + "time-no-trace", trace)
-            end = time.time()
-            timings[dir].append(end - start)
+    print(os.listdir(BASE_DIR))
+    sys.path.insert(0, "/opt/venv/lib/python3.11/site-packages/yolov7")
+    print(f"path: ", sys.path.copy())
+    return get_output(None, file_path=filepath)
 
-    total_time = 0
-    count = 0
-    for brand, b_timings in timings.items():
-        print(f"Timings for {brand}: total: {sum(b_timings)}, avg: {sum(b_timings) / len(b_timings)}")
-        total_time += sum(b_timings)
-        count += len(b_timings)
-    print(f"Total timings: total: {total_time}, avg: {total_time / count}")
-
-
-def perform_demo(args):
-    image_path = args[0]
-    trace = any(a for a in args if a == "trace")
-    timings = any(a for a in args if a == "time")
-    shutil.copy(f"{BASE_DIR}/{image_path}", f"{BASE_DIR}/input/")
-    start_time = time.time()
-    print("Starting")
-    get_output(None, trace=trace)
-    end_time = time.time()
-    if timings:
-        print(f"Time taken: {end_time - start_time}s")
-
-
-if __name__ == "__main__":
-    args = sys.argv
-    if args and args[1] == "run":
-        demo = gr.Interface(fn=get_output, inputs="image", outputs="image")
-        demo.launch(debug=True)
-    else:
-        perform_demo(args[1:])
 
 # 578 * 742
 # (249, 361), (409, 361)
