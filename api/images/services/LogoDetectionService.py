@@ -1,0 +1,2 @@
+class LogoDetectionService:
+    pass
