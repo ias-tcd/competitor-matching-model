@@ -28,10 +28,8 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: echo ${PERSONAL_ACCESS_TOKEN} | docker login ghcr.io -u ${{ secrets.NAMESPACE }} --password-stdin
 
-      - name: Pull images
-        run: |
-          docker pull ${{ env.API_IMAGE }} || true
-          docker pull ${{ env.NGINX_IMAGE }} || true
+      - name: Remove all dangling docker resources
+        run: docker system prune -af
 
       - name: Build images
         env:
