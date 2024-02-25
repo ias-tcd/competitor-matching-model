@@ -17,7 +17,7 @@ COPY ../requirements.txt .
 
 RUN pip install --upgrade pip
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 FROM python:3.11.7-slim AS production
 
