@@ -29,9 +29,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=builder /opt/venv /opt/venv
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV PATH "/opt/venv/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1 \
+	PYTHONUNBUFFERED=1 \
+	PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /src
 
