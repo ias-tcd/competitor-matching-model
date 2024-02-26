@@ -1,6 +1,6 @@
 from .process import process
 
-input_image_path = "C:/Users/pengh/Pictures/test/adidas_shoes.jpg"
+input_image_path = ""
 inferences = process(input_image_path, ".")
 
 for inference in inferences:

@@ -76,7 +76,7 @@ class Detector:
         return detection_inference
 
     def load_model(self, weights, device, trace, half):
-        det = Yolov7Detector(weights=weights, traced=False)
+        Yolov7Detector(weights=weights, traced=False)
         model = attempt_load(weights, map_location=device)  # load FP32 model
         if trace:
             model = TracedModel(model, device, self.img_size)
