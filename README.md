@@ -1,5 +1,9 @@
 # Competitor matching model
 
+[![AWS Deployment](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/deploy.yml/badge.svg)](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/deploy.yml)
+[![Tests](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/build-and-test.yml)
+[![Linting](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/lint-and-format.yml/badge.svg)](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/lint-and-format.yml)
+
 This repo contains the source code for the machine learning models and the api used for TCD SwEng Group 20's project with Integral
 Ad Science - a competitor matching machine learning model.
 
@@ -40,11 +44,16 @@ pip install -r requirements.local.txt
 # Install the pre-commit hooks
 pre-commit install
 
-# Add an environment file (this can be populated later)
-echo FRONTEND_URL=http://localhost:5173 > .env
+# Add an environment file and start by populating it with the frontend url
+echo FRONTEND_URL=http://localhost:5173 >> .env
 
 # Build the docker container
 make build
+
+# Run Django migrations
+# These represent database schema changes and need to be run every time the database structure changes
+# (e.g. new tables adding, table structure changing)
+make migrate
 
 # Run the application
 make run
