@@ -1,3 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 dj-database-url==2.1.0
 Django~=5.0
 django-cors-headers==4.3.1
