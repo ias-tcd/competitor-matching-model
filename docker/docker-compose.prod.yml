@@ -16,6 +16,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
       - DATABASE_URL=${DATABASE_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - API_URL=${API_URL}
     volumes:
       - static_volume:/src/api/staticfiles
     expose:
