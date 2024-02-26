@@ -5,7 +5,8 @@ class BoundingBox:
         self.w = w
         self.h = h
 
+
 class LogoDetectionInference:
-    def __init__(self, boundingBox: BoundingBox, confidence: float):
-        self.boundingBox = boundingBox
+    def __init__(self, bounding_box: BoundingBox, confidence: float):
+        self.bounding_box = bounding_box
         self.confidence = confidence

@@ -1,10 +1,10 @@
 import torch
-from detect import Detector  # Importing the Detector class from detect.py
+from .detect import Detector
 
-def process(input_image_path):
 
+def process(input_image_path: str, model_path: str = "/src/ml/models/logo_detection"):
     source = input_image_path
-    detector = Detector(weights='logo_detection.pt', source=source)
+    detector = Detector(weights=f"{model_path}/logo_detection.pt", source=source)
 
     with torch.no_grad():
         inferences = detector.detect()
