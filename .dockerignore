@@ -4,3 +4,12 @@ venv
 .github
 scraper/
 images/
+docker/
+.dockerignore
+.pre-commit-config.yaml
+.gitattributes
+.gitignore
+Makefile
+README.md
+requirements.local.txt
+setup.cfg

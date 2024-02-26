@@ -15,6 +15,7 @@ services:
       FRONTEND_URL: http://localhost:5173
       SECRET_KEY: >
         django-insecure-zohz1_1^*kqz%9y@=r-j3a2a2c4he6v#%r!_rvk0smkykq!t4^
+      API_URL: http://localhost:8000
     env_file:
       - ../.env
     ports:
