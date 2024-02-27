@@ -107,6 +107,10 @@ if __name__ == "__main__":
 To run the script, run `make model name=<model to test>` where `<model to test>` is the subdirectory of `ml/models` that the model you want to test is in.
 So for the above example, you would run `make model name=logo_detection`.
 
+If the image is not in the root directory of the repository, but is inside the repository somewhere, you can use an absolute path for accessing it.
+Say the image is stored in `ml/models/my_image.png`, then you would change the path in `main.py` to `/src/ml/models/my_image.py` or `ml/models/my_image.png`.
+Note the leading `/` in the first option and lack of it in the second option.
+
 ## Deployments
 
 This API is deployed to AWS using Docker and GitHub Actions. The API can be accessed at the following [url](http://3.254.180.26).
