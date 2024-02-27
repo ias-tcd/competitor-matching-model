@@ -12,5 +12,6 @@ urlpatterns = router.urls
 urlpatterns.extend(
     [
         path("register/", views.RegisterViewSet.as_view(), name="register"),
+        path("login/", views.LoginViewSet.as_view(), name="login"),
     ]
 )
