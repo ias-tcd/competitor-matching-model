@@ -8,10 +8,10 @@ from .services.ImageProcessingService import ImageProcessingService
 class PredictionsViewSet(generics.GenericAPIView):
     def post(self, request):
         print(request.data)
-        images = request.FILES.values()
+        images = request.FILES
         if not images:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        images = images.values()
         return Response(data=ImageProcessingService().process_images(images))
 
         # return Response(
