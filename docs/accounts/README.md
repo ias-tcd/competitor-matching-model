@@ -5,6 +5,7 @@
 `POST /accounts/register/`
 
 Content-Type: application/json
+
 Sample body:
 
 ```json
@@ -42,6 +43,7 @@ Responses:
 `POST /accounts/login/`
 
 Content-Type: application/json
+
 Sample body:
 
 ```json
@@ -74,6 +76,7 @@ Responses:
 `POST /accounts/login/refresh/`
 
 Content-Type: application/json
+
 Sample body:
 
 ```json
