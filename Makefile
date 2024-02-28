@@ -1,3 +1,5 @@
+.PHONY: build run down restart migrations migrate syncdb shell startapp enter test lint format model
+
 build:
 	docker-compose -f docker/docker-compose.local.yml build
 
@@ -38,3 +40,6 @@ format:
 lint: path ?= .
 lint:
 	flake8 $(path) --max-line-length=120 --extend-ignore=E129,E2 --exclude=venv
+
+model:
+	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py run_model $(name)
