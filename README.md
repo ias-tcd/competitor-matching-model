@@ -1,5 +1,9 @@
 # Competitor matching model
 
+[![AWS Deployment](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/deploy.yml/badge.svg)](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/deploy.yml)
+[![Tests](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/build-and-test.yml)
+[![Linting](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/lint-and-format.yml/badge.svg)](https://github.com/ias-tcd/competitor-matching-model/actions/workflows/lint-and-format.yml)
+
 This repo contains the source code for the machine learning models and the api used for TCD SwEng Group 20's project with Integral
 Ad Science - a competitor matching machine learning model.
 
@@ -40,11 +44,16 @@ pip install -r requirements.local.txt
 # Install the pre-commit hooks
 pre-commit install
 
-# Add an environment file (this can be populated later)
-touch .env
+# Add an environment file and start by populating it with the frontend url
+echo FRONTEND_URL=http://localhost:5173 >> .env
 
 # Build the docker container
 make build
+
+# Run Django migrations
+# These represent database schema changes and need to be run every time the database structure changes
+# (e.g. new tables adding, table structure changing)
+make migrate
 
 # Run the application
 make run
@@ -61,6 +70,12 @@ brew install git-lfs
 # After installation
 git lfs install
 ```
+
+## Deployments
+
+This API is deployed to AWS using Docker and GitHub Actions. The API can be accessed at the following [url](http://3.254.180.26).
+In the `/docker` directory you will find `entrypoint.sh` and `docker-compose.prod.yml`. Alongside the deployment script in `.github/workflows/deploy.yml`, this builds a slim version of the API image and pushes the image to the GitHub Container Registry. These images are pulled down in the AWS EC2 instance and used to spin up the containers.
+There are three production containers: `api`, `db` and `nginx`. `api` is used to receive REST requests from our front end client and uses the `db` to persist information. Django (the framework this API is built in) also provides a powerful admin interface which must be served statically. We use `nginx` here to both serve the static files and pass requests to the API.
 
 ## Useful Commands
 

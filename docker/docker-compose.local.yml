@@ -3,6 +3,7 @@ version: "3.8"
 
 services:
   api:
+    container_name: competitor-matching-model-api
     image: competitor-matching-model/api:latest
     command: python api/manage.py runserver 0.0.0.0:8000
     build:
@@ -14,6 +15,7 @@ services:
       FRONTEND_URL: http://localhost:5173
       SECRET_KEY: >
         django-insecure-zohz1_1^*kqz%9y@=r-j3a2a2c4he6v#%r!_rvk0smkykq!t4^
+      API_URL: http://localhost:8000
     env_file:
       - ../.env
     ports:
@@ -24,6 +26,7 @@ services:
       - ../:/src
 
   db:
+    container_name: competitor-matching-model-db
     image: postgres:16.1-alpine
     restart: always
     environment:
