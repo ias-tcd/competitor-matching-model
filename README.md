@@ -71,6 +71,46 @@ brew install git-lfs
 git lfs install
 ```
 
+## Running an individual model
+
+You may want to run custom or specific code on a given model without the API for local testing.
+What you need to do is create a `main.py` file in `ml/models/<model to test>` directory and add a `main` function to it.
+In the `main` function you can add any needed code, see [this example](/ml/models/logo_detection/main.py) for testing with an image.
+The code loads an image from the working directory (root directory of the repository) and runs inference using our logo detection model on it.
+
+```python
+import logging
+
+from .process import process
+
+logging.basicConfig()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+
+def main():
+    input_image_path = "my_image.jpeg"
+    inferences = process(input_image_path)
+
+    for inference in inferences:
+        logger.info(f"x: {inference.bounding_box.x}")
+        logger.info(f"y: {inference.bounding_box.y}")
+        logger.info(f"Width: {inference.bounding_box.w}")
+        logger.info(f"Height: {inference.bounding_box.h}")
+        logger.info(f"Confidence score: {inference.confidence}\n")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+To run the script, run `make model name=<model to test>` where `<model to test>` is the subdirectory of `ml/models` that the model you want to test is in.
+So for the above example, you would run `make model name=logo_detection`.
+
+If the image is not in the root directory of the repository, but is inside the repository somewhere, you can use an absolute path for accessing it.
+Say the image is stored in `ml/models/my_image.png`, then you would change the path in `main.py` to `/src/ml/models/my_image.py` or `ml/models/my_image.png`.
+Note the leading `/` in the first option and lack of it in the second option.
+
 ## Deployments
 
 This API is deployed to AWS using Docker and GitHub Actions. The API can be accessed at the following [url](http://3.254.180.26).

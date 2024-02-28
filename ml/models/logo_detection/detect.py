@@ -3,12 +3,13 @@ import time
 from pathlib import Path
 
 import torch
-from .data import BoundingBox, LogoDetectionInference
 from yolov7_package import Yolov7Detector
 from yolov7_package.models.experimental import attempt_load
 from yolov7_package.utils.datasets import LoadImages
 from yolov7_package.utils.general import check_img_size, non_max_suppression, scale_coords, set_logging, xyxy2xywh
 from yolov7_package.utils.torch_utils import TracedModel, select_device, time_synchronized
+
+from .data import BoundingBox, LogoDetectionInference
 
 
 class Detector:
