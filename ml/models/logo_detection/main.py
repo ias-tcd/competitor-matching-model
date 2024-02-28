@@ -1,12 +1,23 @@
+import logging
+
 from .process import process
 
-input_image_path = ""
-inferences = process(input_image_path, ".")
+logging.basicConfig()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
-for inference in inferences:
-    print("x: ", inference.bounding_box.x)
-    print("y: ", inference.bounding_box.y)
-    print("Width: ", inference.bounding_box.w)
-    print("Height: ", inference.bounding_box.h)
-    print("Confidence score: ", inference.confidence)
-    print("")
+
+def main():
+    input_image_path = ""
+    inferences = process(input_image_path)
+
+    for inference in inferences:
+        logger.info(f"x: {inference.bounding_box.x}")
+        logger.info(f"y: {inference.bounding_box.y}")
+        logger.info(f"Width: {inference.bounding_box.w}")
+        logger.info(f"Height: {inference.bounding_box.h}")
+        logger.info(f"Confidence score: {inference.confidence}\n")
+
+
+if __name__ == "__main__":
+    main()
