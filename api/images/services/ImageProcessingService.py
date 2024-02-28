@@ -4,12 +4,12 @@ from .LogoDetectionService import LogoDetectionService
 
 
 class ImageProcessingService:
-    def process_images(self, images: dict):
+    def process_images(self, images):
         detections = {}
         with make_temp_directory() as tempDirectory:
-            for image in images.keys():
-                file_path = tempDirectory + "/" + image
+            for image in images:
+                file_path = tempDirectory + "/" + image.name
                 with open(file_path, "rb") as file:
                     file.write(image.file.read())
-                detections.update({image: LogoDetectionService().detect_in_image(file_path)})
+                detections.update({image.name: LogoDetectionService().detect_in_image(file_path)})
         return detections
