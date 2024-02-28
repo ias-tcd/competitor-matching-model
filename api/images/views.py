@@ -11,13 +11,9 @@ class PredictionsViewSet(generics.GenericAPIView):
         images = request.FILES
         if not images:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response (
-            data = ImageProcessingService().process_images(images)
-        )
-        
-        
-        
+
+        return Response(data=ImageProcessingService().process_images(images))
+
         # return Response(
         #     data={
         #         "x1": 30,

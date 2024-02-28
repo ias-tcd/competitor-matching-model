@@ -1,4 +1,5 @@
 import torch
+
 from .detect import Detector
 
 
