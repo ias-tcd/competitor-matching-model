@@ -14,6 +14,6 @@ class LogoDetectionService:
                 "w": inference.bounding_box.w,
                 "h": inference.bounding_box.h,
             }
-            detection = {"bbox": bbox, "confifence": inference.confidence}
+            detection = {"bbox": bbox, "confidence": inference.confidence}
             inference_results.append(detection)
         return inference_results
