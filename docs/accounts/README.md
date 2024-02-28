@@ -68,3 +68,32 @@ Responses:
   - any of the fields are blank
   - email is invalid
   - email does not correspond to an existing user in the database
+
+# Refresh an existing access token
+
+`POST /accounts/login/refresh/`
+
+Content-Type: application/json
+Sample body:
+
+```json
+{
+  "refresh": ""
+}
+```
+
+Responses:
+
+- 200 Okay -> Occurs upon successful token refresh.
+  Response containing the access and refresh tokens for future authentication:
+
+```json
+{
+  "refresh": "",
+  "access": ""
+}
+```
+
+- 400 Bad Request -> Occurs if:
+  - refresh token does not correspond to a currently **active** refresh token for a user
+  - any of the fields are blank
