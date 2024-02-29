@@ -16,7 +16,6 @@ def make_temp_directory():
         ...
     ```
     """
-    tempfile.gettempdir()
     temp_directory = tempfile.mkdtemp()
     try:
         yield temp_directory
