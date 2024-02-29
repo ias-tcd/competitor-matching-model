@@ -14,16 +14,6 @@ class PredictionsViewSet(generics.GenericAPIView):
         images = images.values()
         return Response(data=ImageProcessingService().process_images(images))
 
-        # return Response(
-        #     data={
-        #         "x1": 30,
-        #         "x2": 78,
-        #         "y1": 79,
-        #         "y2": 89,
-        #         "Confidence": 97.96,
-        #     }
-        # )
-
 
 """
 EVA PREVIOUS CODE - does not work lol
