@@ -1,2 +1,0 @@
-class ImageProcessingService:
-    pass
