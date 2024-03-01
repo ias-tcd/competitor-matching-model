@@ -7,7 +7,6 @@ from .services.ImageProcessingService import ImageProcessingService
 # Create your views here.
 class PredictionsViewSet(generics.GenericAPIView):
     def post(self, request):
-        print(request.data)
         images = request.FILES
         if not images:
             return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -1,12 +1,12 @@
-from ml.models.logo_detection.process import process as detectLogos
+from ml.models.logo_detection.process import process as detect_logos
 
 # from rest_framework import serializers
 
 
 class LogoDetectionService:
-    def detect_in_image(self, imagePath):
+    def detect_in_image(self, image_path):
         inference_results = []
-        inferences = detectLogos(imagePath)  # List LogoDetectionInference objects (ml.models.logo_detection.data)
+        inferences = detect_logos(image_path)  # List LogoDetectionInference objects (ml.models.logo_detection.data)
         for inference in inferences:
             bbox = {
                 "x": inference.bounding_box.x,
