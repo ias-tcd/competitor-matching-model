@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from .services.ImageProcessingService import ImageProcessingService
+from .services.image_processing_service import image_processing_service
 
 
 # Create your views here.
@@ -11,7 +11,7 @@ class PredictionsViewSet(generics.GenericAPIView):
         if not images:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         images = images.values()
-        return Response(data=ImageProcessingService().process_images(images))
+        return Response(data=image_processing_service().process_images(images))
 
 
 """

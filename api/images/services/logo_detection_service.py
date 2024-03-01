@@ -3,7 +3,7 @@ from ml.models.logo_detection.process import process as detect_logos
 # from rest_framework import serializers
 
 
-class LogoDetectionService:
+class logo_detection_service:
     def detect_in_image(self, image_path):
         inference_results = []
         inferences = detect_logos(image_path)  # List LogoDetectionInference objects (ml.models.logo_detection.data)
