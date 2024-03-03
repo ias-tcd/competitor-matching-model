@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.http.response import HttpResponse as DjangoResponse
+from rest_framework.response import Response as DRFResponse
 
 from ...setup.integration_test_case import IntegrationTestCase
 
@@ -101,6 +103,15 @@ class TestRegisterViewSetIT(IntegrationTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertFalse(User.objects.filter(email="test@example.com").exists())
 
-    def _register(self, payload: dict):
+    def test_removal_of_required_fields(self):
+        response = self._register(
+            {
+                "first_name": "Test",
+            }
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(User.objects.filter(first_name="Test").exists())
+
+    def _register(self, payload: dict) -> DjangoResponse | DRFResponse:
         response = self.public_client.post("/accounts/register/", data=payload, content_type="application/json")
         return response
