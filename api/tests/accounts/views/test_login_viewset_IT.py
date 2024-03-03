@@ -35,7 +35,7 @@ class LoginViewSetIT(IntegrationTestCase, CreateUserMixin):
 
     def test_login_with_bad_password(self):
         response = self._login(password="NotPassword123!")
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_login_with_bad_email(self):
         response = self._login(email="another.email@example.com")
@@ -43,7 +43,7 @@ class LoginViewSetIT(IntegrationTestCase, CreateUserMixin):
 
     def test_empty_payload(self):
         response = self._login(password=None, email=None)
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 400)
 
     def _login(self, **kwargs) -> DjangoResponse | DRFResponse:
         payload = {

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.contrib.auth.models import AbstractUser
 from django.test import TestCase
 
@@ -7,7 +5,7 @@ from ..accounts.creation_helpers import create_user
 
 
 class CreateUserMixin(TestCase):
-    user: Optional[AbstractUser] = None
+    user: AbstractUser
 
     @classmethod
     def setUpTestData(cls):

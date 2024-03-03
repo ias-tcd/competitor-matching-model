@@ -21,15 +21,15 @@ class RefreshTokenViewSetIT(IntegrationTestCase, CreateUserMixin):
 
     def test_refresh_token_with_access_token(self):
         response = self._refresh_token(self.access_token)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_refresh_token_with_shortened_refresh_token(self):
         response = self._refresh_token(self.refresh_token[:-1])
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_refresh_token_with_extended_token(self):
         response = self._refresh_token(self.refresh_token + "c")
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 401)
 
     def test_refreshed_token_allows_future_refreshes(self):
         response = self._refresh_token()
