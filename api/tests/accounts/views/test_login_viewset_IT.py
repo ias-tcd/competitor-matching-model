@@ -4,25 +4,16 @@ from django.utils.timezone import now
 from rest_framework.response import Response as DRFResponse
 
 from ...setup.integration_test_case import IntegrationTestCase
+from ...setup.mixins.create_user_mixin import CreateUserMixin
 
 User = get_user_model()
 
 
-class LoginViewSetIT(IntegrationTestCase):
+class LoginViewSetIT(IntegrationTestCase, CreateUserMixin):
     @classmethod
     def setUpTestData(cls):
         super().setUpTestData()
-        user = User.objects.create(
-            first_name="Test",
-            last_name="User",
-            email="test@example.com",
-            username="test@example.com",
-        )
-        login_password = "Password123!"
-        user.set_password(login_password)
-        user.save()
-        cls.login_user = user
-        cls.login_password = login_password
+        cls.login_password = "Password123!"
 
     def test_valid_login(self):
         response = self._login()
@@ -35,12 +26,12 @@ class LoginViewSetIT(IntegrationTestCase):
         self.assertTrue("refresh" in response.data)
 
     def test_login_updates_last_login(self):
-        self.assertIsNone(self.login_user.last_login)
+        self.assertIsNone(self.user.last_login)
         response = self._login()
         self.assertEqual(response.status_code, 200)
-        self.login_user.refresh_from_db()
-        self.assertIsNotNone(self.login_user.last_login)
-        self.assertLessEqual(self.login_user.last_login, now())
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.last_login)
+        self.assertLessEqual(self.user.last_login, now())
 
     def test_login_with_bad_password(self):
         response = self._login(password="NotPassword123!")
@@ -56,7 +47,7 @@ class LoginViewSetIT(IntegrationTestCase):
 
     def _login(self, **kwargs) -> DjangoResponse | DRFResponse:
         payload = {
-            "email": self.login_user.email,
+            "email": self.user.email,
             "password": self.login_password,
             **kwargs,
         }
