@@ -1,4 +1,12 @@
 companies_to_urls: dict[str, list[str]] = {
+    # "north_face": [
+    # "https://www.thenorthface.ie/shop/en-gb/tnf-ie/men-men-new-arrivals#banner=Fall23.NewArrivals.img.MLPStockFiller1",
+    # "https://www.thenorthface.ie/shop/en-gb/tnf-ie/men-activities-ski-and-snowboard#banner=Fall23.MenSnowsports.img.MLPStockFiller2",
+    # "https://www.thenorthface.ie/shop/en-gb/tnf-ie/men-activities-trail-running#banner=Fall23.ActivitiesRunning.img.MLPStockFiller3",
+    # "https://www.thenorthface.ie/shop/en-gb/tnf-ie/women-women-new-arrivals#banner=Fall23.NewSeason.img.WLPStockFiller1",
+    # "https://www.thenorthface.ie/shop/en-gb/tnf-ie/women-activities-ski-snowboard#banner=Fall23.SnowSports.img.WLPStockFiller2",
+    # "https://www.thenorthface.ie/shop/en-gb/tnf-ie/women-activities-trail-running#banner=Fall23.NewRunning.img.WLPStockFiller3",
+    # ]
     # "under_armour": [
     # "https://www.underarmour.ie/en-ie/c/mens/?start=0&sz=250",
     # "https://www.underarmour.ie/en-ie/c/boys/shoes/?start=0&sz=120",
