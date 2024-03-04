@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "storages",
     "images.apps.ImagesConfig",
     "api.apps.APIConfig",
 ]
@@ -167,3 +168,8 @@ LOGGING = {
         }
     },
 }
+
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "ias-tcd"
+AWS_REGION_NAME = "eu-west-1"
