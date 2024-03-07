@@ -5,6 +5,7 @@ venv
 scraper/
 images/
 docker/
+docs/
 .dockerignore
 .pre-commit-config.yaml
 .gitattributes
