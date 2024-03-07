@@ -117,6 +117,10 @@ This API is deployed to AWS using Docker and GitHub Actions. The API can be acce
 In the `/docker` directory you will find `entrypoint.sh` and `docker-compose.prod.yml`. Alongside the deployment script in `.github/workflows/deploy.yml`, this builds a slim version of the API image and pushes the image to the GitHub Container Registry. These images are pulled down in the AWS EC2 instance and used to spin up the containers.
 There are three production containers: `api`, `db` and `nginx`. `api` is used to receive REST requests from our front end client and uses the `db` to persist information. Django (the framework this API is built in) also provides a powerful admin interface which must be served statically. We use `nginx` here to both serve the static files and pass requests to the API.
 
+## Documentation
+
+We have provided simple API documentation for any of the endpoints we have built here. These are of course useful for external people to look at our project and gain a better understanding of how it works but is also useful as a reference for our team members, particularly those on the front end team. You can view the documentation [here](/docs/README.md).
+
 ## Useful Commands
 
 Below are some useful commands and what they do
