@@ -86,6 +86,8 @@ jobs:
           echo DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }} >> .env
           echo FRONTEND_URL=${{ secrets.FRONTEND_URL }} >> .env
           echo API_URL=http://${{ secrets.AWS_EC2_IP_ADDRESS }} >> .env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
 
       - name: Add the private SSH key to the ssh-agent
         env:
