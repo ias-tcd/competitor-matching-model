@@ -18,7 +18,7 @@ class Detector:
         weights,
         source,
         img_size=640,
-        conf_thres=0.1,
+        conf_thres=0.09,
         iou_thres=0.45,
         device="",
         view_img=False,
