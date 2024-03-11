@@ -31,7 +31,7 @@ def split_images(company_name: str) -> None:
 
 
 def main():
-    split_images("reebok")
+    split_images("north_face")
 
 
 if __name__ == "__main__":
