@@ -10,7 +10,6 @@ def make_folders(company_name: str) -> None:
 
 
 def split_images(company_name: str) -> None:
-    os.chdir("./images")
     data: list[str] = os.listdir(f"./{company_name}")
     make_folders(company_name)
 
@@ -30,8 +29,29 @@ def split_images(company_name: str) -> None:
         os.rename(f"./{company_name}/{img}", f"./{company_name}/test/{img}")
 
 
+def undo_split(company_name: str) -> None:
+    train = os.listdir(f"./{company_name}/training")
+    val = os.listdir(f"./{company_name}/validation")
+    test = os.listdir(f"./{company_name}/test")
+
+    for img in train:
+        os.rename(f"./{company_name}/training/{img}", f"./{company_name}/{img}")
+
+    for img in val:
+        os.rename(f"./{company_name}/validation/{img}", f"./{company_name}/{img}")
+
+    for img in test:
+        os.rename(f"./{company_name}/test/{img}", f"./{company_name}/{img}")
+
+    os.rmdir(f"./{company_name}/training")
+    os.rmdir(f"./{company_name}/validation")
+    os.rmdir(f"./{company_name}/test")
+
+
 def main():
+    os.chdir("./images")
     split_images("north_face")
+    # undo_split("north_face")
 
 
 if __name__ == "__main__":
