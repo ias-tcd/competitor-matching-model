@@ -71,6 +71,11 @@ brew install git-lfs
 git lfs install
 ```
 
+Due to the GitHub organisation being a free organisation, we are somewhat limited by the number of files we can track using git LFS.
+So we had to revert to tracking images with regular git tracking and save LFS for the weights files.
+This overwrote the git history, so to clean this up, we have provided a `.git-blame-ignore-revs` file to be used if checking for commit authors.
+So instead of `git blame <file-name>`, you can use `git blame <file-name> --ignore-revs-file=.git-blame-ignore-revs` to see the cleaner history.
+
 ## Running an individual model
 
 You may want to run custom or specific code on a given model without the API for local testing.
