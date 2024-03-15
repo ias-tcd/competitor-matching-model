@@ -7,6 +7,7 @@ class BoundingBox:
 
 
 class LogoDetectionInference:
-    def __init__(self, bounding_box: BoundingBox, confidence: float):
+    def __init__(self, bounding_box: BoundingBox, confidence: float, overlap: bool = False):
         self.bounding_box = bounding_box
         self.confidence = confidence
+        self.overlap = overlap
