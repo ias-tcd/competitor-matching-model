@@ -1,17 +1,16 @@
 from django.db import models
 
-from api.models import BaseModel
+from api.models import BaseUserOwnedModel
 
 
-class BoundingBox(BaseModel):
-    image_analysis = models.ForeignKey("Analysis", blank=False, null=False)
-    x = models.DecimalField(blank=False, null=False)
-    y = models.DecimalField(blank=False, null=False)
-    width = models.DecimalField(blank=False, null=False)
-    height = models.DecimalField(blank=False, null=False)
-    confidence = models.DecimalField(blank=False, null=False)
-    brand = models.ForeignKey("brands.Brand", on_delete=models.CASCADE, blank=False, null=True)
-    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE, blank=False, null=False)
+class BoundingBox(BaseUserOwnedModel):
+    image_analysis = models.ForeignKey("Analysis", on_delete=models.CASCADE, blank=False, null=False, to_field="id")
+    x = models.DecimalField(blank=False, null=False, max_digits=15, decimal_places=7)
+    y = models.DecimalField(blank=False, null=False, max_digits=15, decimal_places=7)
+    width = models.DecimalField(blank=False, null=False, max_digits=15, decimal_places=7)
+    height = models.DecimalField(blank=False, null=False, max_digits=15, decimal_places=7)
+    confidence = models.DecimalField(blank=False, null=False, max_digits=15, decimal_places=7)
+    brand = models.ForeignKey("brands.Brand", on_delete=models.CASCADE, blank=False, null=True, to_field="id")
 
     class meta:
         app_label = "images"

@@ -1,11 +1,10 @@
 from django.db import models
 
-from api.models import BaseModel
+from api.models import BaseUserOwnedModel
 
 
-class Analysis(BaseModel):
-    image = models.ForeignKey("Image", on_delete=models.CASCADE, blank=False, null=False)
-    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE, blank=False, null=False)
+class Analysis(BaseUserOwnedModel):
+    image = models.ForeignKey("Image", on_delete=models.CASCADE, blank=False, null=False, to_field="id")
 
     class meta:
         app_label = "images"
