@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "images.apps.ImagesConfig",
     "accounts.apps.AccountsConfig",
     "api.apps.APIConfig",
+    "brands.apps.BrandsConfig",
 ]
 
 MIDDLEWARE = [
