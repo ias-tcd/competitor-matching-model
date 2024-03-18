@@ -16,6 +16,7 @@ opencv-python>=4.1.1.26, !=4.9.0.80
 pillow~=10.2.0
 psycopg2==2.9.9
 requests==2.31.0
+tensorflow~=2.16.1
 
 torch~=2.2.0
 whitenoise==6.6.0
