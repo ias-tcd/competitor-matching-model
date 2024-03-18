@@ -31,11 +31,11 @@ jobs:
       - name: Remove all dangling docker resources
         run: docker system prune -af
 
-      #      - name: Pull LFS files
-      #        run: |
-      #          sudo apt-get install git-lfs
-      #          git lfs install
-      #          git lfs pull
+      - name: Pull LFS files
+        run: |
+          sudo apt-get install git-lfs
+          git lfs install
+          git lfs pull
 
       - name: Build images
         env:
