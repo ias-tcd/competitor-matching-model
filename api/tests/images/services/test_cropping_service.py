@@ -16,9 +16,20 @@ class CroppingServiceUT(UnitTestCase):
     def test_crop(self):
         image = mock_image(100, 100)
         cropped_image = self.service.crop(image, BoundingBox(0.5, 0.5, 0.4, 0.4))
-        size = cropped_image.size
-        self.assertEqual(size[0], 40)
-        self.assertEqual(size[1], 40)
+        self.assertEqual(cropped_image.width, 40)
+        self.assertEqual(cropped_image.height, 40)
+
+    def test_crop_with_different_base_x_y(self):
+        image = mock_image(200, 100)
+        cropped_image = self.service.crop(image, BoundingBox(0.3, 0.7, 0.4, 0.5))
+        self.assertEqual(cropped_image.width, 80)
+        self.assertEqual(cropped_image.height, 50)
+
+    def test_crop_with_different_base_w_h(self):
+        image = mock_image(200, 200)
+        cropped_image = self.service.crop(image, BoundingBox(0.5025, 0.5, 0.375, 0.61))
+        self.assertEqual(cropped_image.width, 75)
+        self.assertEqual(cropped_image.height, 122)
 
     def test_crop_with_extended_x_coordinates(self):
         image = mock_image()

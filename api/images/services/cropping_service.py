@@ -13,7 +13,7 @@ class CroppingService:
         cropped_x, cropped_y, cropped_width, cropped_height = self._get_coordinates_from_bounding_box(
             bounding_box, width, height
         )
-        cropped_image = image.crop((cropped_x, cropped_y, cropped_width + cropped_x, cropped_y + cropped_height))
+        cropped_image = image.crop((cropped_x, cropped_y, cropped_x + cropped_width, cropped_y + cropped_height))
         return cropped_image
 
     def _get_coordinates_from_bounding_box(
