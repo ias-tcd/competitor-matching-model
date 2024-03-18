@@ -11,6 +11,10 @@ from yolov7_package.utils.torch_utils import TracedModel, select_device, time_sy
 
 from .data import BoundingBox, LogoDetectionInference
 
+logging.basicConfig()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 
 class Detector:
     def __init__(
@@ -149,9 +153,6 @@ class Detector:
                         inference = LogoDetectionInference(bounding_box=bbox_coordinates, confidence=conf.item())
                         inferences.append(inference)
 
-                logging.basicConfig()
-                logger = logging.getLogger()
-                logger.setLevel(logging.INFO)
                 # Print time (inference + NMS)
                 logger.info(f"{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS")
 
