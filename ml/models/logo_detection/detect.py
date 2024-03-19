@@ -143,7 +143,6 @@ class Detector:
 
                     # Write results
                     for *xyxy, conf, cls in reversed(det):
-
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
 
                         # Store data into the classes
@@ -164,23 +163,21 @@ class Detector:
                         # Printing enumeration of boxes
                         print(i)
                         if self.check_box_containment(*c, *next_c):
-                            inf.overlap= True
+                            inf.overlap = True
                         print(inf.overlap)
-
 
             logger.info(f"Done. ({time.time() - t0:.3f}s)")
             return inferences
 
     def check_box_containment(self, x1, y1, x2, y2, x3, y3, x4, y4):
-            area1 = (x2 - x1) * (y2 - y1)
-
-            x_intersection_start = max(x1, x3)
-            y_intersection_start = max(y1, y3)
-            x_intersection_end = min(x2, x4)
-            y_intersection_end = min(y2, y4)
-
-            intersection_area = max(0, x_intersection_end - x_intersection_start) * max(0,
-                                                                                        y_intersection_end - y_intersection_start)
-            percentage_contained = (intersection_area / area1) * 100
-            print(percentage_contained)
-            return percentage_contained >= 50
+        area1 = (x2 - x1) * (y2 - y1)
+        x_intersection_start = max(x1, x3)
+        y_intersection_start = max(y1, y3)
+        x_intersection_end = min(x2, x4)
+        y_intersection_end = min(y2, y4)
+        intersection_area = max(0, x_intersection_end - x_intersection_start) * max(
+            0, y_intersection_end - y_intersection_start
+        )
+        percentage_contained = (intersection_area / area1) * 100
+        print(percentage_contained)
+        return percentage_contained >= 50
