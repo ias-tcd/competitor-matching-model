@@ -10,10 +10,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: touch .env
+
+      - name: Start Database
+        run: docker-compose -f docker/docker-compose.local.yml up --build -d db
+
       - name: Build
-        run: |
-          touch .env
-          make build
+        run: make build
 
       - name: Test
         run: make test

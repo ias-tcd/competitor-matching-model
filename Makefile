@@ -1,3 +1,5 @@
+.PHONY: build run down restart migrations migrate syncdb shell startapp enter test lint format model
+
 build:
 	docker-compose -f docker/docker-compose.local.yml build
 
@@ -11,25 +13,25 @@ restart:
 	make down && make run
 
 migrations:
-	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py makemigrations
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py makemigrations
 
 migrate:
-	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py migrate
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py migrate
 
 syncdb:
-	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py syncdb
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py syncdb
 
 shell:
-	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py shell
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py shell
 
 startapp:
-	docker-compose -f docker/docker-compose.local.yml run --workdir=/src/api api python manage.py startapp $(name)
+	docker-compose -f docker/docker-compose.local.yml run --rm --workdir=/src/api api python manage.py startapp $(name)
 
 enter:
-	docker-compose -f docker/docker-compose.local.yml run --entrypoint=sh api
+	docker-compose -f docker/docker-compose.local.yml run --rm --entrypoint=sh api
 
 test:
-	docker-compose -f docker/docker-compose.local.yml run api python api/manage.py test $(if $(path),tests.$(path),tests) --keepdb
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py test $(if $(path),tests.$(path),tests) --keepdb
 
 format: path ?= .
 format:
@@ -38,3 +40,6 @@ format:
 lint: path ?= .
 lint:
 	flake8 $(path) --max-line-length=120 --extend-ignore=E129,E2 --exclude=venv
+
+model:
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py run_model $(name)
