@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 
 
 def main():
-    image = "path/to/image"
+    image = "competitor-matching-model/images/adidas"
     image = Image.open(image)
     predictions = predict(image)
     logger.info(predictions)
