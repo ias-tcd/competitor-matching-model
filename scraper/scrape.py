@@ -14,6 +14,7 @@ from selenium import webdriver
 # relevant docs
 # https://www.selenium.dev/documentation/
 # https://requests.readthedocs.io/en/latest/api/
+# try
 
 MAX_NUM_IMAGES_TO_COLLECT_PER_PAGE = 45
 pinterest_url_pattern: str | Pattern[str] = re.compile(r"https://www.pinterest.(com|ie)*")
