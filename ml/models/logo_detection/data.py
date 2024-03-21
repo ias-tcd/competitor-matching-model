@@ -15,3 +15,4 @@ class BoundingBox:
 class LogoDetectionInference:
     bounding_box: BoundingBox
     confidence: float
+    overlap: bool = False
