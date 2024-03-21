@@ -6,3 +6,4 @@
 *.png !text !filter !merge !diff
 *.jpeg !text !filter !merge !diff
 *.jpg !text !filter !merge !diff
+*.h5 filter=lfs diff=lfs merge=lfs -text
