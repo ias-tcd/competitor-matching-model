@@ -14,7 +14,8 @@ def build_pickles():
 
     try:
         index = load_tree("/src/ml/models/search/tree.h5")
-    except:
+    except Exception as e:
+        print(f"{e}")
         index = faiss.IndexFlatL2(2048)
 
     brands_map = load()
