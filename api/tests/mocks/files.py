@@ -1,7 +1,11 @@
 import tempfile
+from decimal import Decimal
+from typing import Optional, Union
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
+
+Number = Union[Decimal, float, int]
 
 
 def mock_file(**kwargs) -> SimpleUploadedFile:
@@ -18,8 +22,14 @@ def mock_request_file():
     """
     Creates a file object suitable for using in integration tests where it is being passed as part of a request body
     """
-    image = Image.new(mode="RGB", size=(100, 100))
+    image = mock_image(100, 100)
     temp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
     image.save(temp_file)
     temp_file.seek(0)
     return temp_file
+
+
+def mock_image(x: Optional[Number] = None, y: Optional[Number] = None) -> Image:
+    x = x or 255
+    y = y or 255
+    return Image.new(mode="RGB", size=(x, y))
