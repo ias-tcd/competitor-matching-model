@@ -158,14 +158,14 @@ class Detector:
                 # Print time (inference + NMS)
                 logger.info(f"{s}Done. ({(1E3 * (t2 - t1)):.1f}ms) Inference, ({(1E3 * (t3 - t2)):.1f}ms) NMS")
 
-            for i, (c, inf) in enumerate(zip(coordinates, inferences)):
-                for j, next_c in enumerate(coordinates):
+            for i, (bbox, inf) in enumerate(zip(coordinates, inferences)):
+                for j, next_bbox in enumerate(coordinates):
                     if i != j:  # Prevent self-comparison
-                        # Printing enumeration of boxes
-                        print(i)
-                        if self.check_box_containment(*c, *next_c):
+                        if self.check_box_containment(*bbox, *next_bbox):
                             inf.overlap = True
-                        print(inf.overlap)
+                            print(inf.overlap, "This box overlaps with a bigger one")
+                        else:
+                            print(inf.overlap, "This box does not overlap")
 
             logger.info(f"Done. ({time.time() - t0:.3f}s)")
             return inferences
