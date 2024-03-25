@@ -11,12 +11,14 @@ from images.services.cropping_service import CroppingService
 from ..logo_detection.data import BoundingBox
 from ..logo_recognition.predict import predict
 
+
 def generate_pickles():
     cropping_service = CroppingService()
     mapped_labels = _generate_mapped_labels()
     for company, labels in mapped_labels.items():
         os.makedirs(f"/src/pickles/{company}", exist_ok=True)
         _process_company(company, labels, cropping_service)
+
 
 def _process_company(company: str, labels: dict[str, BoundingBox], cropping_service: CroppingService):
     company_images = _get_company_images(company)
@@ -27,6 +29,7 @@ def _process_company(company: str, labels: dict[str, BoundingBox], cropping_serv
         vector = predict(cropped_image)
         with open(f"/src/pickles/{company}/{image_name}.pkl", "wb") as f:
             pickle.dump(vector, f)
+
 
 def _get_company_images(company: str) -> List[str]:
     path = f"/src/images/{company}"
@@ -40,6 +43,7 @@ def _get_company_images(company: str) -> List[str]:
             + [f"{path}/validation/{p}" for p in os.listdir(f"{path}/validation")]
         )
     return company_images
+
 
 def _generate_mapped_labels() -> dict[str, dict[str, BoundingBox]]:
     classes = _load_classes()
@@ -55,6 +59,7 @@ def _generate_mapped_labels() -> dict[str, dict[str, BoundingBox]]:
 
     return mapped_labels
 
+
 def _load_classes() -> dict:
     """Map the list of categories provided to a map of id -> name"""
     with open("/src/notes.json") as f:
@@ -63,9 +68,11 @@ def _load_classes() -> dict:
     categories = classes["categories"]
     return {class_json["id"]: class_json["name"] for class_json in categories}
 
+
 def _get_image_name(label_name: str) -> str:
     """Remove the leading hash- and trailing .txt from a label file name"""
     return re.sub(r"^[a-zA-Z0-9]+-", "", label_name).split(".txt")[0]
+
 
 def _get_bounding_box_and_class(label_file_name: str) -> Tuple[BoundingBox, int]:
     with open(f"/src/labels/{label_file_name}") as f:
