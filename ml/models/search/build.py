@@ -43,5 +43,5 @@ def find_max(brands_map: Dict) -> int:
     for v in brands_map.values():
         indices += v
     if len(indices) == 0:
-        return 0
+        return -1
     return max(indices)

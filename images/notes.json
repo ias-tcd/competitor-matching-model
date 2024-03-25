@@ -1,0 +1,13 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "north_face"
+    }
+  ],
+  "info": {
+    "year": 2024,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}
