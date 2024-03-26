@@ -50,7 +50,7 @@ def undo_split(company_name: str) -> None:
 
 def main():
     os.chdir("./images")
-    split_images("north_face")
+    split_images("under_armour")
 
 
 if __name__ == "__main__":
