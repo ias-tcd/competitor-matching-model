@@ -3,23 +3,25 @@ import os
 import re
 from time import sleep
 
+#import filetypex
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
 companies_to_urls: dict[str, list[str]] = {
-    "adidas": ["https://www.adidas.ie/men-t_shirts"],
-    "nike": [],
-    "puma": [],
-    "reebok": [],
-    "under_armour": [],
-    "north_face": [],
-    "new_balance": [],
-    "lululemon": [],
+    # "adidas": ["https://www.adidas.ie/men-t_shirts"],
+    # "nike": ["https://eu.puma.com/de/en/men/clothing/t-shirts-and-tops"],
+    "puma": ["https://eu.puma.com/ie/en/men/clothing/sweatshirts-and-hoodies", ],
+    # "reebok": ["https://www.reebok.eu/en-ie/shopping/men-clothing-t-shirts-tops-tanks"],
+    # "under_armour": [],
+    # "north_face": ["https://www.thenorthface.ie/shop/en-gb/tnf-ie/women-tops-t-shirts-shirts"],
+    # "new_balance": [],
+    # "lululemon": [],
 }
 
 # https://www.selenium.dev/documentation/
-# https://requests.readthedocs.io/en/latest/api/
+# https://requests.readt
+# hedocs.io/en/latest/api/
 
 # create the images directory in home if it doesn't exist
 images_path = "./images"
@@ -51,7 +53,7 @@ for company, urls in companies_to_urls.items():
 
             if src and re.match("https:*", src):
                 img_bytes = requests.get(url=src, timeout=2).content
-                img_path = f"{company_images_dir}/{company}_img_{str(img_num).zfill(3)}"
+                img_path = f"{company_images_dir}/{company}_img_{str(img_num).zfill(3)}.jpg"
 
                 # write img bytes to file-like obj
                 with open(img_path, "wb") as f:
@@ -60,3 +62,5 @@ for company, urls in companies_to_urls.items():
 
                 # wait in between requests
                 sleep(1.5)
+
+                #// python library - import filetype
