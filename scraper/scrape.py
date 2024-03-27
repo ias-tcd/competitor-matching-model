@@ -11,7 +11,7 @@ from selenium import webdriver
 companies_to_urls: dict[str, list[str]] = {
     # "adidas": ["https://www.adidas.ie/men-t_shirts"],
     # "nike": ["https://eu.puma.com/de/en/men/clothing/t-shirts-and-tops"],
-    "puma": ["https://eu.puma.com/ie/en/men/clothing/sweatshirts-and-hoodies", ],
+    "puma": ["https://eu.puma.com/ie/en/women/clothing/t-shirts-and-tops", ],
     # "reebok": ["https://www.reebok.eu/en-ie/shopping/men-clothing-t-shirts-tops-tanks"],
     # "under_armour": [],
     # "north_face": ["https://www.thenorthface.ie/shop/en-gb/tnf-ie/women-tops-t-shirts-shirts"],
@@ -19,6 +19,9 @@ companies_to_urls: dict[str, list[str]] = {
     # "lululemon": [],
 }
 
+
+# previous links 
+# "https://eu.puma.com/ie/en/men/clothing/sweatshirts-and-hoodies"
 # https://www.selenium.dev/documentation/
 # https://requests.readt
 # hedocs.io/en/latest/api/
