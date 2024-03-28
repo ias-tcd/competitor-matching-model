@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.images.models import BoundingBox
+from images.models.bounding_box import BoundingBox
 
 
 class BoundingBoxSerializer(serializers.ModelSerializer):

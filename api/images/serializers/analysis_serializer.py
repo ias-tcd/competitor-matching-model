@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.images.models import Analysis
+from images.models.analysis import Analysis
 
 from .bounding_box_serializer import BoundingBoxSerializer
 

@@ -1,12 +1,13 @@
 # from typing import Optional
 
-from django.db import transaction
+from io import BytesIO
 
-from api.images.models import Analysis, BoundingBox, Image
+from django.db import transaction
 
 # from api.users.models import User
 from api.utils.file_storage.image_storage import ImageStorage
 from api.utils.make_temp_directory import make_temp_directory
+from images.models import Analysis, BoundingBox, Image
 
 from .logo_detection_service import LogoDetectionService
 
@@ -16,7 +17,7 @@ class ImageProcessingService:
         self.storage = ImageStorage()
 
     def process_images(self, images, user):
-        detections = {}
+        results = []
 
         with make_temp_directory() as temp_directory:
             for image in images:
@@ -25,14 +26,15 @@ class ImageProcessingService:
                 file_path = temp_directory + "/" + image_name
                 with open(file_path, "wb") as file:
                     file.write(image_file)
-                detection = LogoDetectionService().detect_in_image(file_path)
-                detections.update({image.name: detection})
-                self.__save_to_s3(image_name=image_name, image=image_file, detections=detection, user=user)
-        return detections
+                detections = LogoDetectionService().detect_in_image(file_path)
+                result = self.__save_to_s3(image_name=image_name, image=image_file, detections=detections, user=user)
+                results.append(result)
+        return results
 
-    # This decorator ensures that the entire block of code is executed as a single transaction.
+    # This decorator ensures that the all the create and bulk_create operations are done in one transaction.
     @transaction.atomic
     def __save_to_s3(self, image_name, image, detections, user):
+        image = BytesIO(image)
         image_url = self.storage.save(image_name, image)
 
         image_object = Image.objects.create(source=image_url, user=user)
@@ -54,3 +56,4 @@ class ImageProcessingService:
             bounding_boxes.append(bounding_box)
 
         BoundingBox.objects.bulk_create(bounding_boxes)
+        return {"image": image_object, "analysis": analysis_object}
