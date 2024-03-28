@@ -58,9 +58,7 @@ class TestBrandViewSet(RequestMixin, CreateUserMixin):
         data = response.json()
         for brand in data:
             self._assert_response_contains_correct_keys(brand)
-        else:
-            # Ensure the checks are run
-            self.assertTrue(False)
+        self.assertGreater(len(data), 0)
 
     def _assert_response_contains_correct_keys(self, response: dict):
         self.assertTrue("id" in response)
