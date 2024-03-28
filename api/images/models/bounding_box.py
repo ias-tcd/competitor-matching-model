@@ -12,5 +12,5 @@ class BoundingBox(BaseUserOwnedModel):
     confidence = models.DecimalField(blank=False, null=False, max_digits=15, decimal_places=7)
     brand = models.ForeignKey("brands.Brand", on_delete=models.CASCADE, blank=False, null=True, to_field="id")
 
-    class meta:
+    class Meta:
         app_label = "images"

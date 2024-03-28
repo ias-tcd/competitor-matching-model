@@ -6,5 +6,5 @@ from api.models import BaseUserOwnedModel
 class Image(BaseUserOwnedModel):
     source = models.URLField(blank=False, null=True)
 
-    class meta:
+    class Meta:
         app_label = "images"

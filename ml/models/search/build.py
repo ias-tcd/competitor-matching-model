@@ -1,5 +1,5 @@
 import os
-import pickle
+import pickle  # nosec
 from typing import Dict
 
 import faiss
@@ -10,7 +10,7 @@ from .store import store
 
 
 def build_pickles():
-    directory = os.listdir("pickles")
+    directory = os.listdir("centroids")
 
     try:
         index = load_tree("/src/ml/models/search/tree.h5")
@@ -23,9 +23,10 @@ def build_pickles():
 
     for dir in directory:
         counts = []
-        for file in os.listdir(f"pickles/{dir}"):
-            with open(f"pickles/{dir}/{file}", "rb") as pickle_file:
-                vector = pickle.load(pickle_file)
+        for file in os.listdir(f"centroids/{dir}"):
+            with open(f"centroids/{dir}/{file}", "rb") as pickle_file:
+                vector = pickle.load(pickle_file)  # nosec
+            vector = vector.reshape((1, 2048))
             index.add(vector)
             counts.append(count)
             count += 1
