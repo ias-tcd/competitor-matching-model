@@ -116,6 +116,26 @@ If the image is not in the root directory of the repository, but is inside the r
 Say the image is stored in `ml/models/my_image.png`, then you would change the path in `main.py` to `/src/ml/models/my_image.py` or `ml/models/my_image.png`.
 Note the leading `/` in the first option and lack of it in the second option.
 
+## Running the full flow from the command line
+
+To run the full command line flow with no database persistence do the following:
+
+1. Add the image you want to test to the root directory of the repository - take note of the name
+2. Run `make detect-infer name=<image name>`. The image name must also include the file extension
+
+The result should be something like this, printed to the console:
+
+```
+...
+INFO:root:Done. (1.605s)
+1/1 ━━━━━━━━━━━━━━━━━━━━ 1s 611ms/step
+INFO:root:Brands detected in order: ['under_armour', 'under_armour', 'north_face', 'new_balance'] with bbox: LogoDetectionInference(bounding_box=BoundingBox(x=0.3321428596973419, y=0.14478416740894318, w=0.12857143580913544, h=0.09892086684703827), confidence=0.21258708834648132, overlap=False)
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 106ms/step
+INFO:root:Brands detected in order: ['under_armour', 'new_balance', 'north_face', 'under_armour'] with bbox: LogoDetectionInference(bounding_box=BoundingBox(x=0.5866071581840515, y=0.308453232049942, w=0.12678571045398712, h=0.09892086684703827), confidence=0.2793073356151581, overlap=False)
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 104ms/step
+INFO:root:Brands detected in order: ['under_armour', 'north_face', 'new_balance', 'under_armour'] with bbox: LogoDetectionInference(bounding_box=BoundingBox(x=0.8410714268684387, y=0.4739208519458771, w=0.12857143580913544, h=0.09892086684703827), confidence=0.29989734292030334, overlap=False)
+```
+
 ## Deployments
 
 This API is deployed to AWS using Docker and GitHub Actions. The API can be accessed at the following [url](http://3.254.180.26).

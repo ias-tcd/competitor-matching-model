@@ -1,4 +1,4 @@
-.PHONY: build run down restart migrations migrate syncdb shell startapp enter test lint format model
+.PHONY: build run down restart migrations migrate syncdb shell startapp enter test lint format model detect-infer
 
 build:
 	docker-compose -f docker/docker-compose.local.yml build
@@ -43,3 +43,6 @@ lint:
 
 model:
 	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py run_model $(name)
+
+detect-infer:
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py detect_and_infer $(name)
