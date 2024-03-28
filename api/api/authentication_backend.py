@@ -4,7 +4,6 @@ from django.contrib.auth.backends import ModelBackend
 
 class AuthenticationBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
-        print("HELLO")
         users = get_user_model()
         username = username or kwargs.get(users.USERNAME_FIELD)
         try:
