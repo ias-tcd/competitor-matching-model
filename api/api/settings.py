@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-zohz1_1^*kqz%9y@=r-j3a2a2c4he6v#%r!_rvk0smkykq!t4^")
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "storages",
     "images.apps.ImagesConfig",
     "accounts.apps.AccountsConfig",
@@ -188,7 +189,11 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
     "TOKEN_TYPE_CLAIM": "token_type",
+    "VERIFYING_KEY": None,
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
+
+AUTHENTICATION_BACKENDS = ("api.authentication_backend.AuthenticationBackend",)
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -196,7 +201,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
+        permissions.IsAuthenticated,
         permissions.HasObjectOwnerPermission,
     ),
     "DEFAULT_FILTER_BACKENDS": (
