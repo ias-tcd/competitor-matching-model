@@ -1,5 +1,7 @@
 from typing import Optional
 
+import jwt
+
 from ...setup.integration_test_case import IntegrationTestCase
 from ...setup.mixins.create_user_mixin import CreateUserMixin
 
@@ -12,6 +14,12 @@ class RefreshTokenViewSetIT(IntegrationTestCase, CreateUserMixin):
     def setUpClass(cls):
         super().setUpClass()
         cls._set_tokens()
+
+    @classmethod
+    def setUpTestData(cls):
+        jwt_decode = jwt.decode
+        super().setUpTestData()
+        jwt.decode = jwt_decode
 
     def test_refresh_token(self):
         response = self._refresh_token()
