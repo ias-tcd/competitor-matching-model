@@ -1,1 +1,0 @@
-from .has_object_owner_permissions import HasObjectOwnerPermission
