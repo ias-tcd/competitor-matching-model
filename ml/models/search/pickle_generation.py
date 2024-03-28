@@ -1,7 +1,7 @@
-import logging
 import json
+import logging
 import os
-import pickle
+import pickle  # nosec
 import re
 from typing import List, Tuple
 
@@ -11,7 +11,6 @@ from images.services.cropping_service import CroppingService
 
 from ..logo_detection.data import BoundingBox
 from ..logo_recognition.predict import predict
-
 
 logging.basicConfig()
 logger = logging.getLogger()
