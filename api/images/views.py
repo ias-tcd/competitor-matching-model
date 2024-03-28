@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 
+from .serializers.prediction_response_serializer import PredictionResponseSerializer
 from .services.image_processing_service import ImageProcessingService
 
 
@@ -11,7 +12,9 @@ class PredictionsViewSet(generics.GenericAPIView):
         if not images:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         images = images.values()
-        return Response(data=ImageProcessingService().process_images(images))
+        results = ImageProcessingService().process_images(images=images, user=request.user)
+        serializer = PredictionResponseSerializer(results, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 """
