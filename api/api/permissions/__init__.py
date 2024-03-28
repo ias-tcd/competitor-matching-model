@@ -1,1 +1,2 @@
 from .has_object_owner_permissions import HasObjectOwnerPermission
+from .is_authenticated import IsAuthenticated
