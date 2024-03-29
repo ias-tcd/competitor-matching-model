@@ -36,8 +36,8 @@ class ImageProcessingService:
     def __save_to_s3(self, image_name, image, detections, user):
         image_file = BytesIO(image)
 
-        image_url = self.storage.save(image_name, image_file)
-
+        self.storage.save(image_name, image_file)
+        image_url = self.storage.unsigned_url(image_name)
         image_obj = Image.objects.create(source=image_url, user=user)
 
         analysis_obj = Analysis.objects.create(image=image_obj, user=user)
