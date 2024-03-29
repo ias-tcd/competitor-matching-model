@@ -34,18 +34,19 @@ class ImageProcessingService:
     # This decorator ensures that the all the create and bulk_create operations are done in one transaction.
     @transaction.atomic
     def __save_to_s3(self, image_name, image, detections, user):
-        image = BytesIO(image)
-        image_url = self.storage.save(image_name, image)
+        image_file = BytesIO(image)
 
-        image_object = Image.objects.create(source=image_url, user=user)
+        image_url = self.storage.save(image_name, image_file)
 
-        analysis_object = Analysis.objects.create(image=image_object, user=user)
+        image_obj = Image.objects.create(source=image_url, user=user)
+
+        analysis_obj = Analysis.objects.create(image=image_obj, user=user)
 
         bounding_boxes = []
         for detection in detections:
             bbox = detection["bbox"]
             bounding_box = BoundingBox(
-                image_analysis=analysis_object,
+                image_analysis=analysis_obj,
                 x=bbox["x"],
                 y=bbox["y"],
                 width=bbox["w"],
@@ -56,4 +57,5 @@ class ImageProcessingService:
             bounding_boxes.append(bounding_box)
 
         BoundingBox.objects.bulk_create(bounding_boxes)
-        return {"image": image_object, "analysis": analysis_object}
+
+        return {"image": image_obj, "analysis": analysis_obj}

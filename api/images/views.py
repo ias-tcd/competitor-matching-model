@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
@@ -10,7 +10,7 @@ from .services.image_processing_service import ImageProcessingService
 
 
 # Create your views here.
-class PredictionsViewSet(generics.GenericAPIView):
+class PredictionsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Image.objects.all()
     serializer_class = PredictionResponseSerializer
     permission_classes = [IsAuthenticated, HasObjectOwnerPermission]
