@@ -8,7 +8,7 @@ Content-Type: multipart/form-data
 
 Sample body with two images:
 
-```json
+```form-data
 {
  --form 'north face=@"/path/to/image/"' \
  --form 'adidas=@"/path/to/image/"'
