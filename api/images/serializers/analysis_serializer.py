@@ -22,10 +22,10 @@ class AnalysisSerializer(serializers.ModelSerializer):
             detections[image_name].append(
                 {
                     "bbox": {
-                        "x1": float(bounding_box.x),
-                        "y1": float(bounding_box.y),
-                        "x2": float(bounding_box.x + bounding_box.width),
-                        "y2": float(bounding_box.y + bounding_box.height),
+                        "x": bounding_box.x,
+                        "y": bounding_box.y,
+                        "width": bounding_box.width,
+                        "height": bounding_box.height,
                     },
                     "confidence": float(bounding_box.confidence),
                 }
