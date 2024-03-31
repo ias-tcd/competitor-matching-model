@@ -1,11 +1,8 @@
-# from typing import Optional
-
 from io import BytesIO
 from uuid import uuid4
 
 from django.db import transaction
 
-# from api.users.models import User
 from api.utils.file_storage.image_storage import ImageStorage
 from api.utils.make_temp_directory import make_temp_directory
 from images.models import Analysis, BoundingBox, Image
@@ -37,8 +34,9 @@ class ImageProcessingService:
     def __save_to_s3(self, image_name, image, detections, user):
         image_file = BytesIO(image)
 
-        self.storage.save(f"{user.id}/{uuid4()}_{image_name}", image_file)
-        image_url = self.storage.unsigned_url(image_name)
+        file_name = f"{user.id}/{uuid4()}_{image_name}"
+        self.storage.save(file_name, image_file)
+        image_url = self.storage.unsigned_url(file_name)
         image_obj = Image.objects.create(source=image_url, user=user)
 
         analysis_obj = Analysis.objects.create(image=image_obj, user=user)
