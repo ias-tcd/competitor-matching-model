@@ -5,6 +5,7 @@ from unittest.mock import patch
 from tests.mocks.exceptions import raise_exception
 from tests.mocks.files import mock_file
 from tests.setup.images.logo_detection_inference_helpers import sample_inference, sample_inferences
+from tests.setup.mixins.approximately_equal_mixin import ApproximatelyEqualMixin
 from tests.setup.mixins.create_user_mixin import CreateUserMixin
 from tests.setup.unit_test_case import UnitTestCase
 
@@ -13,7 +14,7 @@ from images.services.image_processing_service import ImageProcessingService
 from ml.models.logo_detection import LogoDetectionInference
 
 
-class TestImageProcessingService(UnitTestCase, CreateUserMixin):
+class TestImageProcessingService(UnitTestCase, CreateUserMixin, ApproximatelyEqualMixin):
     service: ImageProcessingService
 
     @classmethod
@@ -100,9 +101,10 @@ class TestImageProcessingService(UnitTestCase, CreateUserMixin):
         self.assertEqual(response["analysis"], analysis)
 
     def _assert_response_matches_inference(self, response: BoundingBox, expected: LogoDetectionInference):
+        self.assert_approximately_equal(response.confidence, expected.confidence)
         self.assertAlmostEqual(response.confidence, Decimal(expected.confidence), places=5)
         bbox_expected = expected.bounding_box
-        self.assertAlmostEqual(response.x, Decimal(bbox_expected.x), places=5)
-        self.assertAlmostEqual(response.y, Decimal(bbox_expected.y), places=5)
-        self.assertAlmostEqual(response.width, Decimal(bbox_expected.w), places=5)
-        self.assertAlmostEqual(response.height, Decimal(bbox_expected.h), places=5)
+        self.assert_approximately_equal(response.x, bbox_expected.x)
+        self.assert_approximately_equal(response.y, bbox_expected.y)
+        self.assert_approximately_equal(response.width, bbox_expected.w)
+        self.assert_approximately_equal(response.height, bbox_expected.h)
