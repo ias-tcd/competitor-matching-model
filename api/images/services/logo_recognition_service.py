@@ -18,7 +18,7 @@ class LogoRecognitionService:
             brands = search(vector)
             if brands is not None and brands[0]:
                 name = brands[0]
-                first_brand = Brand.objects.filter(name__icontains=name.replace("_", " ").first())
+                first_brand = Brand.objects.filter(name__icontains=name.replace("_", " ")).first()
 
             else:
                 first_brand = None

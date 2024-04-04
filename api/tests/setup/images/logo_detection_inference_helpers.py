@@ -23,3 +23,7 @@ def sample_bbox():
         w=random.random(),
         h=random.random(),
     )
+
+
+def sample_brand_inference():
+    return ["under_armour"]
