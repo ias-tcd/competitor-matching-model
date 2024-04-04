@@ -1,12 +1,17 @@
-from typing import List
+import logging
+from typing import List, Tuple
 
 import numpy as np
 
 from .load import load
 from .mappy import load as map_load
 
+logging.basicConfig()
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
-def search(embedding: np.ndarray) -> List[str]:
+
+def search_and_distances(embedding: np.ndarray) -> Tuple[List[str], List]:
     tree = load("/src/ml/models/search/tree.h5")
     k = 4
     distances, indices = tree.search(embedding, k)
@@ -19,4 +24,11 @@ def search(embedding: np.ndarray) -> List[str]:
             if index in brands_index:
                 brands[i] = name
 
+    logger.info(f"Brands detected: {brands} with distances {distances} and indices {indices}")
+
+    return brands, distances
+
+
+def search(embedding: np.ndarray) -> List[str]:
+    brands, _ = search_and_distances(embedding)
     return brands
