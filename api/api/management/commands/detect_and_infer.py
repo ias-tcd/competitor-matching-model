@@ -27,7 +27,11 @@ class Command(BaseCommand):
         image = Image.open(file)
         inferences = process(file)
         for inference in inferences:
-            cropped_image = service.crop(image, inference.bounding_box)
-            vector = predict(cropped_image)
-            brands = search(vector)
-            logger.info(f"Brands detected in order: {brands} with bbox: {inference}")
+            try:
+                cropped_image = service.crop(image, inference.bounding_box)
+                logger.info(f"Bounding box is {inference.bounding_box}, confidence is {inference.confidence}")
+                vector = predict(cropped_image)
+                brands = search(vector)
+                logger.info(f"Brands detected in order: {brands} with bbox: {inference}")
+            except Exception as e:
+                logger.error(f"Error in infering brand: {e}, bbox: {inference.bounding_box}")

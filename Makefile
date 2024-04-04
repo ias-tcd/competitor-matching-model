@@ -46,3 +46,6 @@ model:
 
 detect-infer:
 	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py detect_and_infer $(name)
+
+test-model:
+	docker-compose -f docker/docker-compose.local.yml run --rm api python api/manage.py test_model
