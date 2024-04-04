@@ -168,7 +168,7 @@ class Detector:
                             print(inf.overlap, "This box does not overlap")
 
             logger.info(f"Done. ({time.time() - t0:.3f}s)")
-            return inferences
+            return [inference for inference in inferences if not inference.overlap]
 
     def check_box_containment(self, x1, y1, x2, y2, x3, y3, x4, y4):
         area1 = (x2 - x1) * (y2 - y1)
