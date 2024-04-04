@@ -34,6 +34,7 @@ def search(embedding: np.ndarray) -> List[str]:
     brands, _ = search_and_distances(embedding)
     return brands
 
+
 def filter_(distances, indices):
     filtered_distances = []
     filtered_indices = []
