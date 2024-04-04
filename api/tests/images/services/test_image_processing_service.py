@@ -4,7 +4,11 @@ from unittest.mock import patch
 
 from tests.mocks.exceptions import raise_exception
 from tests.mocks.files import mock_file
-from tests.setup.images.logo_detection_inference_helpers import sample_inference, sample_inferences
+from tests.setup.images.logo_detection_inference_helpers import (
+    sample_brand_inference,
+    sample_inference,
+    sample_inferences,
+)
 from tests.setup.mixins.approximately_equal_mixin import ApproximatelyEqualMixin
 from tests.setup.mixins.create_user_mixin import CreateUserMixin
 from tests.setup.unit_test_case import UnitTestCase
@@ -22,10 +26,12 @@ class TestImageProcessingService(UnitTestCase, CreateUserMixin, ApproximatelyEqu
         super().setUpClass()
         cls.service = ImageProcessingService()
 
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
+    @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
     @patch("images.services.logo_detection_service.detect_logos")
-    def test_process_images_with_one_image(self, process_mock, save_mock, url_mock):
+    def test_process_images_with_one_image(self, process_mock, save_mock, url_mock, *args):
         return_value = sample_inference()
         process_mock.return_value = [return_value]
 
@@ -38,10 +44,12 @@ class TestImageProcessingService(UnitTestCase, CreateUserMixin, ApproximatelyEqu
 
         self._assert_image_analysis_and_bboxes_exist("myurl.com", response, return_value)
 
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
+    @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", side_effect=raise_exception())
     @patch("images.services.logo_detection_service.detect_logos")
-    def test_process_images_with_one_image_and_s3_failing(self, process_mock, save_mock, url_mock):
+    def test_process_images_with_one_image_and_s3_failing(self, process_mock, save_mock, url_mock, *args):
         return_value = sample_inference()
         process_mock.return_value = [return_value]
 
@@ -54,10 +62,12 @@ class TestImageProcessingService(UnitTestCase, CreateUserMixin, ApproximatelyEqu
 
         self._assert_image_analysis_and_bboxes_exist(None, response, return_value)
 
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
+    @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", side_effect=raise_exception())
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
     @patch("images.services.logo_detection_service.detect_logos")
-    def test_process_images_with_one_image_and_s3_failing_on_url_fetch(self, process_mock, save_mock, url_mock):
+    def test_process_images_with_one_image_and_s3_failing_on_url_fetch(self, process_mock, save_mock, url_mock, *args):
         return_value = sample_inference()
         process_mock.return_value = [return_value]
 
@@ -70,10 +80,12 @@ class TestImageProcessingService(UnitTestCase, CreateUserMixin, ApproximatelyEqu
 
         self._assert_image_analysis_and_bboxes_exist(None, response, return_value)
 
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
+    @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", side_effect=["my-url.com", "my-url2.com"])
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
     @patch("images.services.logo_detection_service.detect_logos")
-    def test_process_images_with_multiple_images(self, process_mock, save_mock, url_mock):
+    def test_process_images_with_multiple_images(self, process_mock, save_mock, url_mock, *args):
         first_return_value = sample_inferences(1)
         second_return_value = sample_inferences(1)
         process_mock.side_effect = [first_return_value, second_return_value]

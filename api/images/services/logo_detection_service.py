@@ -17,3 +17,7 @@ class LogoDetectionService:
             detection = {"bbox": bbox, "confidence": inference.confidence}
             inference_results.append(detection)
         return inference_results
+
+    def detect_for_recognition(self, image_path):
+        inferences = detect_logos(image_path)  # List LogoDetectionInference objects (ml.models.logo_detection.data)
+        return inferences

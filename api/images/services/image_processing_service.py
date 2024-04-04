@@ -3,12 +3,14 @@ from io import BytesIO
 from uuid import uuid4
 
 from django.db import transaction
+from PIL import Image as PILImage
 
 from api.utils.file_storage.image_storage import ImageStorage
 from api.utils.make_temp_directory import make_temp_directory
 from images.models import Analysis, BoundingBox, Image
 
 from .logo_detection_service import LogoDetectionService
+from .logo_recognition_service import LogoRecognitionService
 
 logging.basicConfig()
 logger = logging.getLogger()
@@ -19,6 +21,7 @@ class ImageProcessingService:
     def __init__(self) -> None:
         self.storage = ImageStorage()
         self.logo_detection = LogoDetectionService()
+        self.logo_recognition = LogoRecognitionService()
 
     def process_images(self, images, user):
         results = []
@@ -30,14 +33,20 @@ class ImageProcessingService:
                 file_path = temp_directory + "/" + image_name
                 with open(file_path, "wb") as file:
                     file.write(image_file)
-                detections = self.logo_detection.detect_in_image(file_path)
-                result = self.__save_to_s3(image_name=image_name, image=image_file, detections=detections, user=user)
+                # detections = self.logo_detection.detect_in_image(file_path)  # Juts bboxes and confidence
+                detection_inferences = self.logo_detection.detect_for_recognition(file_path)
+                recognitions = self.logo_recognition.predict_and_search(
+                    detection_inferences, PILImage.open(file_path)
+                )  # Brands
+                result = self.__save_to_s3(
+                    image_name=image_name, image=image_file, recognitions=recognitions, user=user
+                )
                 results.append(result)
         return results
 
     # This decorator ensures that the all the create and bulk_create operations are done in one transaction.
     @transaction.atomic
-    def __save_to_s3(self, image_name, image, detections, user):
+    def __save_to_s3(self, image_name, image, recognitions, user):
         image_file = BytesIO(image)
         image_obj = Image(user=user)
 
@@ -53,15 +62,16 @@ class ImageProcessingService:
         analysis_obj = Analysis.objects.create(image=image_obj, user=user)
 
         bounding_boxes = []
-        for detection in detections:
-            bbox = detection["bbox"]
+        for recognition in recognitions:
+            bbox = recognition["bbox"]
             bounding_box = BoundingBox(
                 image_analysis=analysis_obj,
                 x=bbox["x"],
                 y=bbox["y"],
                 width=bbox["w"],
                 height=bbox["h"],
-                confidence=detection["confidence"],
+                confidence=recognition["confidence"],
+                brand=bbox["brand"],
                 user=user,
             )
             bounding_boxes.append(bounding_box)
