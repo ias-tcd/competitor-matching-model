@@ -3,6 +3,7 @@ from io import BytesIO
 from uuid import uuid4
 
 from django.db import transaction
+from PIL import Image as PILImage
 
 from api.utils.file_storage.image_storage import ImageStorage
 from api.utils.make_temp_directory import make_temp_directory
@@ -34,7 +35,9 @@ class ImageProcessingService:
                     file.write(image_file)
                 # detections = self.logo_detection.detect_in_image(file_path)  # Juts bboxes and confidence
                 detection_inferences = self.logo_detection.detect_for_recognition(file_path)
-                recognitions = self.logo_recognition.predict_and_search(detection_inferences, image_file)  # Brands
+                recognitions = self.logo_recognition.predict_and_search(
+                    detection_inferences, PILImage.open(file_path)
+                )  # Brands
                 result = self.__save_to_s3(
                     image_name=image_name, image=image_file, recognitions=recognitions, user=user
                 )
