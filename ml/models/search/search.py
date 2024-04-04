@@ -14,7 +14,8 @@ logger.setLevel(logging.INFO)
 def search_and_distances(embedding: np.ndarray) -> Tuple[List[str], List]:
     tree = load("/src/ml/models/search/tree.h5")
     k = 4
-    distances, indices = tree.search(embedding, k)
+    distances_and_indices = tree.search(embedding, k)
+    distances, indices = filter_(*distances_and_indices)
     brands_map = map_load()
 
     brands = [""] * k
@@ -32,3 +33,13 @@ def search_and_distances(embedding: np.ndarray) -> Tuple[List[str], List]:
 def search(embedding: np.ndarray) -> List[str]:
     brands, _ = search_and_distances(embedding)
     return brands
+
+def filter_(distances, indices):
+    filtered_distances = []
+    filtered_indices = []
+    for distance, index in zip(distances[0], indices[0]):
+        if distance <= 1200:
+            filtered_distances.append(distance)
+            filtered_indices.append(index)
+
+    return filtered_distances, np.array(filtered_indices)
