@@ -18,10 +18,10 @@ def sample_inference(bounding_box: Optional[BoundingBox] = None):
 
 def sample_bbox():
     return BoundingBox(
-        x=random.random(),
-        y=random.random(),
-        w=random.random(),
-        h=random.random(),
+        x=0.5,
+        y=0.5,
+        w=0.3,
+        h=0.4,
     )
 
 

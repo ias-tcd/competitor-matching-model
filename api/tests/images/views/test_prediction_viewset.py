@@ -6,7 +6,8 @@ from django.test import Client
 from django.urls import reverse
 from tests.mocks.exceptions import raise_exception
 from tests.mocks.files import mock_request_file
-from tests.setup.images.logo_detection_inference_helpers import (  # sample_brand_inference,
+from tests.setup.images.logo_detection_inference_helpers import (
+    sample_brand_inference,
     sample_inference,
     sample_inferences,
 )
@@ -31,7 +32,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
         client = self.login(self.user)
         self._predict(client, None, 400)
 
-    @patch("images.services.logo_recognition_service.predict", return_value=sample_inference())
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
     @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
@@ -50,7 +51,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
 
         self._assert_response_matches_expected(response, "myurl.com", return_value)
 
-    @patch("images.services.logo_recognition_service.predict", return_value=sample_inference())
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
     @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", side_effect=raise_exception())
@@ -69,7 +70,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
 
         self._assert_response_matches_expected(response, None, return_value)
 
-    @patch("images.services.logo_recognition_service.predict", return_value=sample_inference())
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
     @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", side_effect=raise_exception())
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
@@ -88,7 +89,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
 
         self._assert_response_matches_expected(response, None, return_value)
 
-    @patch("images.services.logo_recognition_service.predict", return_value=sample_inference())
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
     @patch("images.services.logo_recognition_service.search", return_value=None)
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", side_effect=["my-url.com", "my-url2.com"])
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")

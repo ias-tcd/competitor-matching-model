@@ -2,20 +2,23 @@ import tempfile
 from decimal import Decimal
 from typing import Optional, Union
 
+from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
 Number = Union[Decimal, float, int]
 
 
-def mock_file(**kwargs) -> SimpleUploadedFile:
+def mock_file() -> SimpleUploadedFile:
     """
     Creates a file suitable for using in unit tests where the file is being passed as arguments to functions
     It is not suitable for use in integration tests where it is being passed as part of a request body
     """
-    kwargs.setdefault("name", "my document")
-    kwargs.setdefault("content", b"this is my document")
-    return SimpleUploadedFile(**kwargs)
+    image = mock_image(600, 600)
+    image_file = ContentFile(b"")
+    image.save(image_file, "PNG")
+    image_file.seek(0)
+    return SimpleUploadedFile("image.png", image_file.read(), content_type="image/png")
 
 
 def mock_request_file():

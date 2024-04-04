@@ -26,7 +26,7 @@ class AnalysisSerializer(serializers.ModelSerializer):
                         "y": bounding_box.y,
                         "width": bounding_box.width,
                         "height": bounding_box.height,
-                        "brand": bounding_box.brand.name,
+                        "brand": bounding_box.brand.name if bounding_box.brand else None,
                     },
                     "confidence": float(bounding_box.confidence),
                 }
