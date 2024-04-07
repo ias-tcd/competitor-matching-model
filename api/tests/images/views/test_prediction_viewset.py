@@ -2,6 +2,7 @@ from typing import Optional
 from unittest.mock import patch
 from uuid import UUID
 
+from brands.models import Brand
 from django.test import Client
 from django.urls import reverse
 from tests.mocks.exceptions import raise_exception
@@ -19,6 +20,13 @@ from ml.models.logo_detection import LogoDetectionInference
 
 
 class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMixin):
+    all_brand_ids: str
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.all_brand_ids = ",".join([str(brand) for brand in Brand.objects.values_list("id", flat=True)])
+
     def test_list_blocks_non_authenticated_user(self):
         response = self.public_client.get(path=reverse("images:predictions-list"))
         self.assertEqual(response.status_code, 403)
@@ -33,7 +41,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
         self._predict(client, None, 400)
 
     @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
-    @patch("images.services.logo_recognition_service.search", return_value=None)
+    @patch("images.services.logo_recognition_service.search", return_value=sample_brand_inference())
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
     @patch("images.services.logo_detection_service.detect_logos")
@@ -52,7 +60,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
         self._assert_response_matches_expected(response, "myurl.com", return_value)
 
     @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
-    @patch("images.services.logo_recognition_service.search", return_value=None)
+    @patch("images.services.logo_recognition_service.search", return_value=sample_brand_inference())
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", side_effect=raise_exception())
     @patch("images.services.logo_detection_service.detect_logos")
@@ -71,7 +79,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
         self._assert_response_matches_expected(response, None, return_value)
 
     @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
-    @patch("images.services.logo_recognition_service.search", return_value=None)
+    @patch("images.services.logo_recognition_service.search", return_value=sample_brand_inference())
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", side_effect=raise_exception())
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
     @patch("images.services.logo_detection_service.detect_logos")
@@ -90,7 +98,7 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
         self._assert_response_matches_expected(response, None, return_value)
 
     @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
-    @patch("images.services.logo_recognition_service.search", return_value=None)
+    @patch("images.services.logo_recognition_service.search", return_value=sample_brand_inference())
     @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", side_effect=["my-url.com", "my-url2.com"])
     @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
     @patch("images.services.logo_detection_service.detect_logos")
@@ -109,8 +117,52 @@ class TestPredictionViewSet(RequestMixin, CreateUserMixin, ApproximatelyEqualMix
         self._assert_response_matches_expected(response[0], "my-url.com", first_return_value[0])
         self._assert_response_matches_expected(response[1], "my-url2.com", second_return_value[0])
 
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
+    @patch("images.services.logo_recognition_service.search", return_value=sample_brand_inference())
+    @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
+    @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
+    @patch("images.services.logo_detection_service.detect_logos")
+    def test_process_images_with_one_image_and_brand_filtering(self, process_mock, save_mock, url_mock, *args):
+        return_value = sample_inference()
+        process_mock.return_value = [return_value]
+
+        client = self.login(self.user)
+        under_armour = Brand.objects.get(name="Under Armour")
+        response = self._predict(client, {"file": mock_request_file(), "brands": str(under_armour.id)}).json()
+        self.assertEqual(len(response), 1)
+        response = response[0]
+        process_mock.assert_called_once()
+        save_mock.assert_called_once()
+        url_mock.assert_called_once()
+
+        self._assert_response_matches_expected(response, "myurl.com", return_value)
+
+    @patch("images.services.logo_recognition_service.predict", return_value=sample_brand_inference())
+    @patch("images.services.logo_recognition_service.search", return_value=sample_brand_inference())
+    @patch("api.utils.file_storage.image_storage.ImageStorage.unsigned_url", return_value="myurl.com")
+    @patch("api.utils.file_storage.image_storage.ImageStorage.save", return_value="")
+    @patch("images.services.logo_detection_service.detect_logos")
+    def test_process_images_with_one_image_and_brand_filtering_returns_excluded(
+        self, process_mock, save_mock, url_mock, *args
+    ):
+        return_value = sample_inference()
+        process_mock.return_value = [return_value]
+
+        client = self.login(self.user)
+        under_armour = Brand.objects.get(name="New Balance")
+        response = self._predict(client, {"file": mock_request_file(), "brands": str(under_armour.id)}).json()
+        self.assertEqual(len(response), 1)
+        response = response[0]
+        process_mock.assert_called_once()
+        save_mock.assert_called_once()
+        url_mock.assert_called_once()
+
+        self._assert_image_serialises(response["image"], "myurl.com")
+        self.assertEqual(len(response["analysis"]["detections"].values()), 0)
+
     def _predict(self, client: Client, files: Optional[dict], status_code: Optional[int] = None):
         status_code = status_code or 200
+        files and files.setdefault("brands", self.all_brand_ids)
         response = self.post(client, path=reverse("images:predictions-list"), data=files)
         self.assertEqual(response.status_code, status_code)
         return response

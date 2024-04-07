@@ -28,6 +28,7 @@ class PredictionsViewSet(viewsets.ReadOnlyModelViewSet):
         if not images:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         images = images.values()
-        results = self.service.process_images(images=images, user=request.user)
+        selected_brands = request.data.get("brands", "").split(",")
+        results = self.service.process_images(images=images, user=request.user, selected_brands=selected_brands)
         serializer = PredictionResponseSerializer(results, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

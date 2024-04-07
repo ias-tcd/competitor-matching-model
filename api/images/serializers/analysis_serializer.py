@@ -15,7 +15,7 @@ class AnalysisSerializer(serializers.ModelSerializer):
 
     def get_detections(self, obj):
         detections = {}
-        for bounding_box in obj.boundingbox_set.all():
+        for bounding_box in obj.boundingbox_set.filter(excluded=False):
             image_name = bounding_box.image_analysis.image.source
             if image_name not in detections:
                 detections[image_name] = []

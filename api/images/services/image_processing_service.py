@@ -1,6 +1,7 @@
 import logging
 from io import BytesIO
-from uuid import uuid4
+from typing import List
+from uuid import UUID, uuid4
 
 from django.db import transaction
 from PIL import Image as PILImage
@@ -23,7 +24,7 @@ class ImageProcessingService:
         self.logo_detection = LogoDetectionService()
         self.logo_recognition = LogoRecognitionService()
 
-    def process_images(self, images, user):
+    def process_images(self, images, user, selected_brands: List[str | UUID]):
         results = []
 
         with make_temp_directory() as temp_directory:
@@ -39,14 +40,18 @@ class ImageProcessingService:
                     detection_inferences, PILImage.open(file_path)
                 )  # Brands
                 result = self.__save_to_s3(
-                    image_name=image_name, image=image_file, recognitions=recognitions, user=user
+                    image_name=image_name,
+                    image=image_file,
+                    recognitions=recognitions,
+                    user=user,
+                    selected_brands=selected_brands,
                 )
                 results.append(result)
         return results
 
     # This decorator ensures that the all the create and bulk_create operations are done in one transaction.
     @transaction.atomic
-    def __save_to_s3(self, image_name, image, recognitions, user):
+    def __save_to_s3(self, image_name, image, recognitions, user, selected_brands):
         image_file = BytesIO(image)
         image_obj = Image(user=user)
 
@@ -64,16 +69,32 @@ class ImageProcessingService:
         bounding_boxes = []
         for recognition in recognitions:
             bbox = recognition["bbox"]
-            bounding_box = BoundingBox(
-                image_analysis=analysis_obj,
-                x=bbox["x"],
-                y=bbox["y"],
-                width=bbox["w"],
-                height=bbox["h"],
-                confidence=recognition["confidence"],
-                brand=bbox["brand"],
-                user=user,
-            )
+
+            if bbox["brand"] and str(bbox["brand"].id) not in selected_brands:
+                bounding_box = BoundingBox(
+                    image_analysis=analysis_obj,
+                    x=bbox["x"],
+                    y=bbox["y"],
+                    width=bbox["w"],
+                    height=bbox["h"],
+                    confidence=recognition["confidence"],
+                    brand=bbox["brand"],
+                    user=user,
+                    excluded=True,
+                )
+            else:
+                bounding_box = BoundingBox(
+                    image_analysis=analysis_obj,
+                    x=bbox["x"],
+                    y=bbox["y"],
+                    width=bbox["w"],
+                    height=bbox["h"],
+                    confidence=recognition["confidence"],
+                    brand=bbox["brand"],
+                    user=user,
+                    excluded=False,
+                )
+
             bounding_boxes.append(bounding_box)
 
         BoundingBox.objects.bulk_create(bounding_boxes)

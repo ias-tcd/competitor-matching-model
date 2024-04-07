@@ -9,4 +9,4 @@ class BoundingBoxSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoundingBox
-        fields = ["id", "image_analysis", "x", "y", "width", "height", "confidence", "brand", "user"]
+        fields = ["id", "image_analysis", "x", "y", "width", "height", "confidence", "brand", "user", "excluded"]
