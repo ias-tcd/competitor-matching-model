@@ -1,17 +1,18 @@
 # Images Endpoints
 
-## Feeed image(s) to model for predictions
+## Feed image(s) to model for predictions
 
 `POST /images/predictions/`
 
 Content-Type: multipart/form-data
 
-Sample body with two images:
+Sample body with two images, with north face (takes in the brand id in the database) as a selected brand:
 
 ```form-data
 {
- --form 'north face=@"/path/to/image/"' \
- --form 'adidas=@"/path/to/image/"'
+ --form 'north face=@"/Users/dhruv/Pictures/Screenshots/Screenshot 2024-03-29 at 13.50.48.png"' \
+--form 'adidas=@"/Users/dhruv/Pictures/Screenshots/Screenshot 2024-02-24 at 00.11.19.png"' \
+--form 'brands="4048334f-e761-407e-8b68-3643bb3ee7a5"'
 }
 ```
 
@@ -24,46 +25,16 @@ Responses:
 [
   {
     "image": {
-      "id": "e40b7456-4d8d-45d5-8271-5dad094c03ed",
-      "source": "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/3bf19f0f-0865-45ac-a7db-817dc33fa452_Screenshot%202024-03-29%20at%2013.50.48.png",
+      "id": "83b039de-a355-428a-8b26-133423e04b7c",
+      "source": "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/15a6056f-82fa-4a97-8531-3253c7649a5f_Screenshot%202024-03-29%20at%2013.50.48.png",
       "user": "53947785-3749-410f-879f-82ca9efb7846"
     },
     "analysis": {
-      "id": "3e054aae-4fea-45e3-88a2-06eb0a88c9a3",
-      "image": "e40b7456-4d8d-45d5-8271-5dad094c03ed",
+      "id": "f1c92dd0-072d-4416-9a19-264d8f2f913c",
+      "image": "83b039de-a355-428a-8b26-133423e04b7c",
       "user": "53947785-3749-410f-879f-82ca9efb7846",
       "detections": {
-        "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/3bf19f0f-0865-45ac-a7db-817dc33fa452_Screenshot%202024-03-29%20at%2013.50.48.png": [
-          {
-            "bbox": {
-              "x": 0.7169118,
-              "y": 0.8469917,
-              "width": 0.4443277,
-              "height": 0.0549793,
-              "brand": "North Face"
-            },
-            "confidence": 0.1828757
-          },
-          {
-            "bbox": {
-              "x": 0.1538866,
-              "y": 0.8469917,
-              "width": 0.2363445,
-              "height": 0.0466805,
-              "brand": "North Face"
-            },
-            "confidence": 0.2011037
-          },
-          {
-            "bbox": {
-              "x": 0.9852941,
-              "y": 0.9849585,
-              "width": 0.0294118,
-              "height": 0.0280083,
-              "brand": "North Face"
-            },
-            "confidence": 0.2324943
-          },
+        "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/15a6056f-82fa-4a97-8531-3253c7649a5f_Screenshot%202024-03-29%20at%2013.50.48.png": [
           {
             "bbox": {
               "x": 0.5084034,
@@ -80,88 +51,15 @@ Responses:
   },
   {
     "image": {
-      "id": "e8164439-37a6-4242-a98f-9591ddf10709",
-      "source": "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/447c647d-6ea3-4872-8fbd-779fbfbc49d7_Screenshot%202024-02-24%20at%2000.11.19.png",
+      "id": "f0796e50-4e9c-4a08-bfed-b2506cfa7fbb",
+      "source": "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/dbbcb517-34ee-4499-b37e-c0a8557517aa_Screenshot%202024-02-24%20at%2000.11.19.png",
       "user": "53947785-3749-410f-879f-82ca9efb7846"
     },
     "analysis": {
-      "id": "c4ebe26f-74e3-4495-961f-4bb240accc85",
-      "image": "e8164439-37a6-4242-a98f-9591ddf10709",
+      "id": "81102f37-373b-4150-a97c-811b68afa7d4",
+      "image": "f0796e50-4e9c-4a08-bfed-b2506cfa7fbb",
       "user": "53947785-3749-410f-879f-82ca9efb7846",
-      "detections": {
-        "https://ias-tcd.s3.eu-west-1.amazonaws.com/images/53947785-3749-410f-879f-82ca9efb7846/447c647d-6ea3-4872-8fbd-779fbfbc49d7_Screenshot%202024-02-24%20at%2000.11.19.png": [
-          {
-            "bbox": {
-              "x": 0.0536779,
-              "y": 0.1476982,
-              "width": 0.0656064,
-              "height": 0.0294118,
-              "brand": "North Face"
-            },
-            "confidence": 0.0987038
-          },
-          {
-            "bbox": {
-              "x": 0.9828529,
-              "y": 0.266624,
-              "width": 0.0183897,
-              "height": 0.0664962,
-              "brand": "North Face"
-            },
-            "confidence": 0.1191955
-          },
-          {
-            "bbox": {
-              "x": 0.2629225,
-              "y": 0.1473785,
-              "width": 0.0487078,
-              "height": 0.0262148,
-              "brand": "North Face"
-            },
-            "confidence": 0.1240576
-          },
-          {
-            "bbox": {
-              "x": 0.2447813,
-              "y": 0.9574808,
-              "width": 0.0879722,
-              "height": 0.0773657,
-              "brand": "New Balance"
-            },
-            "confidence": 0.1637323
-          },
-          {
-            "bbox": {
-              "x": 0.9816104,
-              "y": 0.2189898,
-              "width": 0.0208748,
-              "height": 0.1681586,
-              "brand": "New Balance"
-            },
-            "confidence": 0.1994071
-          },
-          {
-            "bbox": {
-              "x": 0.0666004,
-              "y": 0.0460358,
-              "width": 0.0785288,
-              "height": 0.0626598,
-              "brand": "Under Armour"
-            },
-            "confidence": 0.2817453
-          },
-          {
-            "bbox": {
-              "x": 0.2040258,
-              "y": 0.4133632,
-              "width": 0.0382704,
-              "height": 0.0632992,
-              "brand": "North Face"
-            },
-            "confidence": 0.4656409
-          }
-        ]
-      }
+      "detections": {}
     }
   }
 ]
